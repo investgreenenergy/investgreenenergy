@@ -12,6 +12,7 @@
            1. CSS VARIABLES & THEME SETTINGS
            ========================================================================== */
         :root {
+           
             --dark-green: #082b1c;
             --dark-green-light: #12452f;
             --dark-green-hover: #185c3f;
@@ -275,7 +276,7 @@
         .package-price span { font-size: 16px; color: var(--text-gray); font-weight: 500; }
         
         .package-details { 
-            display: flex; 
+            display: flex;
             justify-content: space-between; 
             margin-bottom: 20px; 
             font-size: 13px; 
@@ -314,7 +315,7 @@
         }
         
         .nav-item i { 
-            display: block; 
+            display: block;
             font-size: 22px; 
             margin-bottom: 6px; 
             transition: transform 0.2s;
@@ -356,7 +357,8 @@
         .modal-overlay.show .modal-content { transform: scale(1); }
         
         .close-modal {
-            position: absolute; top: 15px; right: 20px;
+            position: absolute;
+            top: 15px; right: 20px;
             color: var(--text-gray); font-size: 28px; cursor: pointer;
             transition: color 0.2s;
         }
@@ -372,7 +374,8 @@
             border: 1px dashed rgba(255, 215, 0, 0.3);
         }
         .warning-text { 
-            color: var(--bright-yellow); font-size: 12px; margin-bottom: 15px; 
+            color: var(--bright-yellow);
+            font-size: 12px; margin-bottom: 15px; 
             background: rgba(255,215,0,0.1); padding: 12px; border-radius: var(--border-radius-sm);
             line-height: 1.5;
         }
@@ -419,7 +422,7 @@
            11. IMAGES & ANIMATIONS
            ========================================================================== */
         .hero-image {
-            width: 100%; 
+            width: 100%;
             max-width: 260px; 
             margin: 10px auto 25px auto; 
             display: block; 
@@ -446,7 +449,8 @@
 
         /* Profile Specific */
         .profile-avatar {
-            width: 80px; height: 80px;
+            width: 80px;
+            height: 80px;
             background: rgba(255, 215, 0, 0.1);
             border: 2px solid var(--bright-yellow);
             border-radius: 50%;
@@ -456,12 +460,50 @@
         }
         
         .history-item {
-            display: flex; justify-content: space-between; align-items: center;
+            display: flex;
+            justify-content: space-between; align-items: center;
             padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .history-item:last-child { border-bottom: none; }
         .history-icon { width: 35px; height: 35px; border-radius: 50%; background: rgba(46,204,113,0.1); color: var(--success-green); display: flex; justify-content: center; align-items: center; }
 
+        /* ==========================================================================
+           12. CALENDAR CHECK-IN
+           ========================================================================== */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
+            gap: 6px;
+            max-height: 250px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0,0,0,0.2);
+            border-radius: var(--border-radius-sm);
+        }
+        .day-box {
+            width: 28px;
+            height: 28px;
+            background: white;
+            color: var(--dark-green);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 800;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        .day-box.checked {
+            background: var(--bright-yellow);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+        }
+        .rewards-text p {
+            margin: 8px 0;
+            font-size: 12px;
+            text-align: left;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -473,7 +515,6 @@
     <div id="login-view" class="view active">
         <div class="text-center">
             <h1 class="logo-title" onclick="appLogic.adminTriggerClick()">Invest In Energy</h1>
-            
             <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" class="hero-image">
                 <rect width="240" height="120" rx="10" fill="#ffffff"/>
                 <rect x="180" y="25" width="35" height="75" rx="5" fill="#2ecc71"/>
@@ -490,7 +531,6 @@
                 <circle cx="120" cy="25" r="14" fill="none" stroke="#2ecc71" stroke-width="2"/>
                 <path d="M122 15 l-6 10 h5 l-3 10 l9 -12 h-5 z" fill="#2ecc71"/>
             </svg>
-            
             <p style="color: var(--text-gray); margin-bottom: 35px; font-weight: 500;">Login to your green portfolio</p>
         </div>
 
@@ -499,9 +539,9 @@
             <div class="phone-group">
                 <div class="input-wrapper phone-code">
                     <select id="login-country-code">
-                       <option value="+93">+93 (AF)</option>
+                        <option value="
 
-                        <option value="+93">+93 (Afghanistan 🇦🇫)</option>
+   <option value="+93">+93 (Afghanistan 🇦🇫)</option>
 <option value="+355">+355 (Albania 🇦🇱)</option>
 <option value="+213">+213 (Algeria 🇩🇿)</option>
 <option value="+1684">+1684 (American Samoa 🇦🇸)</option>
@@ -930,7 +970,488 @@
 <option value="+263">+263 (Zimbabwe 🇿🇼)</option>
   
 
-                    </select>
+                        </select>
+                </div>
+                <div class="input-wrapper phone-number">
+                    <i class="fas fa-phone-alt"></i>
+                    <input type="tel" id="login-phone" placeholder="871234567">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="login-password" placeholder="Enter password">
+            </div>
+        </div>
+
+        <button class="btn" id="btn-login" onclick="appLogic.login()">
+            <span>Login Securely</span> <i class="fas fa-arrow-right"></i>
+        </button>
+        <p class="switch-link" onclick="appLogic.switchAuthView('register')">Don't have an account? <span>Register here</span></p>
+    </div>
+
+    <div id="register-view" class="view">
+        <div class="text-center">
+            <h1 class="logo-title">Invest In Energy</h1>
+            <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" class="hero-image">
+                <rect width="240" height="120" rx="10" fill="#ffffff"/>
+                <path d="M120 20 L220 100 L20 100 Z" fill="#2ecc71" opacity="0.2"/>
+                <rect x="100" y="40" width="40" height="60" fill="#082b1c"/>
+                <path d="M120 10 L150 40 L90 40 Z" fill="#27ae60"/>
+                <circle cx="120" cy="65" r="12" fill="#FFD700"/>
+                <path d="M120 58 L117 65 L123 65 L120 72" stroke="#082b1c" stroke-width="2" fill="none"/>
+            </svg>
+            <p style="color: var(--text-gray); margin-bottom: 25px; font-weight: 500;">Create new account</p>
+        </div>
+
+        <div class="form-group">
+            <label>Full Name</label>
+            <div class="input-wrapper">
+                <i class="fas fa-user"></i>
+                <input type="text" id="reg-name" placeholder="John Doe">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <div class="phone-group">
+                <div class="input-wrapper phone-code">
+                    <select id="reg-country-code">
+                        <option value=
+
+   <option value="+93">+93 (Afghanistan 🇦🇫)</option>
+<option value="+355">+355 (Albania 🇦🇱)</option>
+<option value="+213">+213 (Algeria 🇩🇿)</option>
+<option value="+1684">+1684 (American Samoa 🇦🇸)</option>
+<option value="+376">+376 (Andorra 🇦🇩)</option>
+<option value="+244">+244 (Angola 🇦🇴)</option>
+<option value="+1264">+1264 (Anguilla 🇦🇮)</option>
+<option value="+1268">+1268 (Antigua and Barbuda 🇦🇬)</option>
+<option value="+54">+54 (Argentina 🇦🇷)</option>
+<option value="+374">+374 (Armenia 🇦🇲)</option>
+<option value="+297">+297 (Aruba 🇦🇼)</option>
+<option value="+61">+61 (Australia 🇦🇺)</option>
+<option value="+43">+43 (Austria 🇦🇹)</option>
+<option value="+994">+994 (Azerbaijan 🇦🇿)</option>
+<option value="+1242">+1242 (Bahamas 🇧🇸)</option>
+<option value="+973">+973 (Bahrain 🇧🇭)</option>
+<option value="+880">+880 (Bangladesh 🇧🇩)</option>
+<option value="+1246">+1246 (Barbados 🇧🇧)</option>
+<option value="+375">+375 (Belarus 🇧🇾)</option>
+<option value="+32">+32 (Belgium 🇧🇪)</option>
+<option value="+501">+501 (Belize 🇧🇿)</option>
+<option value="+229">+229 (Benin 🇧🇯)</option>
+<option value="+1441">+1441 (Bermuda 🇧🇲)</option>
+<option value="+975">+975 (Bhutan 🇧🇹)</option>
+<option value="+591">+591 (Bolivia 🇧🇴)</option>
+<option value="+387">+387 (Bosnia and Herzegovina 🇧🇦)</option>
+<option value="+267">+267 (Botswana 🇧🇼)</option>
+<option value="+55">+55 (Brazil 🇧🇷)</option>
+<option value="+673">+673 (Brunei 🇧🇳)</option>
+<option value="+359" selected>+359 (Bulgaria 🇧🇬)</option>
+<option value="+226">+226 (Burkina Faso 🇧🇫)</option>
+<option value="+257">+257 (Burundi 🇧🇮)</option>
+<option value="+855">+855 (Cambodia 🇰🇭)</option>
+<option value="+237">+237 (Cameroon 🇨🇲)</option>
+<option value="+1">+1 (Canada 🇨🇦)</option>
+<option value="+238">+238 (Cape Verde 🇨🇻)</option>
+<option value="+1345">+1345 (Cayman Islands 🇰🇾)</option>
+<option value="+236">+236 (Central African Republic 🇨🇫)</option>
+<option value="+235">+235 (Chad 🇹🇩)</option>
+<option value="+56">+56 (Chile 🇨🇱)</option>
+<option value="+86">+86 (China 🇨🇳)</option>
+<option value="+57">+57 (Colombia 🇨🇴)</option>
+<option value="+269">+269 (Comoros 🇰🇲)</option>
+<option value="+242">+242 (Congo 🇨🇬)</option>
+<option value="+243">+243 (DR Congo 🇨🇩)</option>
+<option value="+506">+506 (Costa Rica 🇨🇷)</option>
+<option value="+385">+385 (Croatia 🇭🇷)</option>
+<option value="+53">+53 (Cuba 🇨🇺)</option>
+<option value="+357">+357 (Cyprus 🇨🇾)</option>
+<option value="+420">+420 (Czech Republic 🇨🇿)</option>
+<option value="+45">+45 (Denmark 🇩🇰)</option>
+<option value="+253">+253 (Djibouti 🇩🇯)</option>
+<option value="+1767">+1767 (Dominica 🇩🇲)</option>
+<option value="+1809">+1809 (Dominican Republic 🇩🇴)</option>
+<option value="+593">+593 (Ecuador 🇪🇨)</option>
+<option value="+20">+20 (Egypt 🇪🇬)</option>
+<option value="+503">+503 (El Salvador 🇸🇻)</option>
+<option value="+240">+240 (Equatorial Guinea 🇬🇶)</option>
+<option value="+291">+291 (Eritrea 🇪🇷)</option>
+<option value="+372">+372 (Estonia 🇪🇪)</option>
+<option value="+251">+251 (Ethiopia 🇪🇹)</option>
+<option value="+679">+679 (Fiji 🇫🇯)</option>
+<option value="+358">+358 (Finland 🇫🇮)</option>
+<option value="+33">+33 (France 🇫🇷)</option>
+<option value="+241">+241 (Gabon 🇬🇦)</option>
+<option value="+220">+220 (Gambia 🇬🇲)</option>
+<option value="+995">+995 (Georgia 🇬🇪)</option>
+<option value="+49">+49 (Germany 🇩🇪)</option>
+<option value="+233">+233 (Ghana 🇬🇭)</option>
+<option value="+350">+350 (Gibraltar 🇬🇮)</option>
+<option value="+30">+30 (Greece 🇬🇷)</option>
+<option value="+299">+299 (Greenland 🇬🇱)</option>
+<option value="+1473">+1473 (Grenada 🇬🇩)</option>
+<option value="+502">+502 (Guatemala 🇬🇹)</option>
+<option value="+224">+224 (Guinea 🇬🇳)</option>
+<option value="+245">+245 (Guinea-Bissau 🇬🇼)</option>
+<option value="+592">+592 (Guyana 🇬🇾)</option>
+<option value="+509">+509 (Haiti 🇭🇹)</option>
+<option value="+504">+504 (Honduras 🇭🇳)</option>
+<option value="+852">+852 (Hong Kong 🇭🇰)</option>
+<option value="+36">+36 (Hungary 🇭🇺)</option>
+<option value="+354">+354 (Iceland 🇮🇸)</option>
+<option value="+91">+91 (India 🇮🇳)</option>
+<option value="+62">+62 (Indonesia 🇮🇩)</option>
+<option value="+98">+98 (Iran 🇮🇷)</option>
+<option value="+964">+964 (Iraq 🇮🇶)</option>
+<option value="+353">+353 (Ireland 🇮🇪)</option>
+<option value="+972">+972 (Israel 🇮🇱)</option>
+<option value="+39">+39 (Italy 🇮🇹)</option>
+<option value="+225">+225 (Ivory Coast 🇨🇮)</option>
+<option value="+1876">+1876 (Jamaica 🇯🇲)</option>
+<option value="+81">+81 (Japan 🇯🇵)</option>
+<option value="+962">+962 (Jordan 🇯🇴)</option>
+<option value="+7">+7 (Kazakhstan 🇰🇿)</option>
+<option value="+254">+254 (Kenya 🇰🇪)</option>
+<option value="+686">+686 (Kiribati 🇰🇮)</option>
+<option value="+965">+965 (Kuwait 🇰🇼)</option>
+<option value="+996">+996 (Kyrgyzstan 🇰🇬)</option>
+<option value="+856">+856 (Laos 🇱🇦)</option>
+<option value="+371">+371 (Latvia 🇱🇻)</option>
+<option value="+961">+961 (Lebanon 🇱🇧)</option>
+<option value="+266">+266 (Lesotho 🇱🇸)</option>
+<option value="+231">+231 (Liberia 🇱🇷)</option>
+<option value="+218">+218 (Libya 🇱🇾)</option>
+<option value="+423">+423 (Liechtenstein 🇱🇮)</option>
+<option value="+370">+370 (Lithuania 🇱🇹)</option>
+<option value="+352">+352 (Luxembourg 🇱🇺)</option>
+<option value="+853">+853 (Macau 🇲🇴)</option>
+<option value="+389">+389 (North Macedonia 🇲🇰)</option>
+<option value="+261">+261 (Madagascar 🇲🇬)</option>
+<option value="+265">+265 (Malawi 🇲🇼)</option>
+<option value="+60">+60 (Malaysia 🇲🇾)</option>
+<option value="+960">+960 (Maldives 🇲🇻)</option>
+<option value="+223">+223 (Mali 🇲🇱)</option>
+<option value="+356">+356 (Malta 🇲🇹)</option>
+<option value="+222">+222 (Mauritania 🇲🇷)</option>
+<option value="+230">+230 (Mauritius 🇲🇺)</option>
+<option value="+52">+52 (Mexico 🇲🇽)</option>
+<option value="+373">+373 (Moldova 🇲🇩)</option>
+<option value="+377">+377 (Monaco 🇲🇨)</option>
+<option value="+976">+976 (Mongolia 🇲🇳)</option>
+<option value="+382">+382 (Montenegro 🇲🇪)</option>
+<option value="+212">+212 (Morocco 🇲🇦)</option>
+<option value="+258">+258 (Mozambique 🇲🇿)</option>
+<option value="+95">+95 (Myanmar 🇲🇲)</option>
+<option value="+264">+264 (Namibia 🇳🇦)</option>
+<option value="+977">+977 (Nepal 🇳🇵)</option>
+<option value="+31">+31 (Netherlands 🇳🇱)</option>
+<option value="+64">+64 (New Zealand 🇳🇿)</option>
+<option value="+505">+505 (Nicaragua 🇳🇮)</option>
+<option value="+227">+227 (Niger 🇳🇪)</option>
+<option value="+234">+234 (Nigeria 🇳🇬)</option>
+<option value="+850">+850 (North Korea 🇰🇵)</option>
+<option value="+47">+47 (Norway 🇳🇴)</option>
+<option value="+968">+968 (Oman 🇴🇲)</option>
+<option value="+92">+92 (Pakistan 🇵🇰)</option>
+<option value="+970">+970 (Palestine 🇵🇸)</option>
+<option value="+507">+507 (Panama 🇵🇦)</option>
+<option value="+675">+675 (Papua New Guinea 🇵🇬)</option>
+<option value="+595">+595 (Paraguay 🇵🇾)</option>
+<option value="+51">+51 (Peru 🇵🇪)</option>
+<option value="+63">+63 (Philippines 🇵🇭)</option>
+<option value="+48">+48 (Poland 🇵🇱)</option>
+<option value="+351">+351 (Portugal 🇵🇹)</option>
+<option value="+1787">+1787 (Puerto Rico 🇵🇷)</option>
+<option value="+974">+974 (Qatar 🇶🇦)</option>
+<option value="+40">+40 (Romania 🇷🇴)</option>
+<option value="+7">+7 (Russia 🇷🇺)</option>
+<option value="+250">+250 (Rwanda 🇷🇼)</option>
+<option value="+966">+966 (Saudi Arabia 🇸🇦)</option>
+<option value="+221">+221 (Senegal 🇸🇳)</option>
+<option value="+381">+381 (Serbia 🇷🇸)</option>
+<option value="+248">+248 (Seychelles 🇸🇨)</option>
+<option value="+232">+232 (Sierra Leone 🇸🇱)</option>
+<option value="+65">+65 (Singapore 🇸🇬)</option>
+<option value="+421">+421 (Slovakia 🇸🇰)</option>
+<option value="+386">+386 (Slovenia 🇸🇮)</option>
+<option value="+252">+252 (Somalia 🇸🇴)</option>
+<option value="+27">+27 (South Africa 🇿🇦)</option>
+<option value="+82">+82 (South Korea 🇰🇷)</option>
+<option value="+34">+34 (Spain 🇪🇸)</option>
+<option value="+94">+94 (Sri Lanka 🇱🇰)</option>
+<option value="+249">+249 (Sudan 🇸🇩)</option>
+<option value="+46">+46 (Sweden 🇸🇪)</option>
+<option value="+41">+41 (Switzerland 🇨🇭)</option>
+<option value="+963">+963 (Syria 🇸🇾)</option>
+<option value="+886">+886 (Taiwan 🇹🇼)</option>
+<option value="+992">+992 (Tajikistan 🇹🇯)</option>
+<option value="+255">+255 (Tanzania 🇹🇿)</option>
+<option value="+66">+66 (Thailand 🇹🇭)</option>
+<option value="+228">+228 (Togo 🇹🇬)</option>
+<option value="+216">+216 (Tunisia 🇹🇳)</option>
+<option value="+90">+90 (Turkey 🇹🇷)</option>
+<option value="+993">+993 (Turkmenistan 🇹🇲)</option>
+<option value="+256">+256 (Uganda 🇺🇬)</option>
+<option value="+380">+380 (Ukraine 🇺🇦)</option>
+<option value="+971">+971 (United Arab Emirates 🇦🇪)</option>
+<option value="+44">+44 (United Kingdom 🇬🇧)</option>
+<option value="+1">+1 (United States 🇺🇸)</option>
+<option value="+598">+598 (Uruguay 🇺🇾)</option>
+<option value="+998">+998 (Uzbekistan 🇺🇿)</option>
+<option value="+39">+39 (Vatican City 🇻🇦)</option>
+<option value="+58">+58 (Venezuela 🇻🇪)</option>
+<option value="+84">+84 (Vietnam 🇻🇳)</option>
+<option value="+967">+967 (Yemen 🇾🇪)</option>
+<option value="+260">+260 (Zambia 🇿🇲)</option>
+<option value="+263">+263 (Zimbabwe 🇿🇼)</option>
+
+                                         </select>
+                </div>
+                <div class="input-wrapper phone-number">
+                    <i class="fas fa-phone-alt"></i>
+                    <input type="tel" id="login-phone" placeholder="871234567">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="login-password" placeholder="Enter password">
+            </div>
+        </div>
+
+        <button class="btn" id="btn-login" onclick="appLogic.login()">
+            <span>Login Securely</span> <i class="fas fa-arrow-right"></i>
+        </button>
+        <p class="switch-link" onclick="appLogic.switchAuthView('register')">Don't have an account? <span>Register here</span></p>
+    </div>
+
+    <div id="register-view" class="view">
+        <div class="text-center">
+            <h1 class="logo-title">Invest In Energy</h1>
+            
+            <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" class="hero-image">
+                <rect width="240" height="120" rx="10" fill="#ffffff"/>
+                <path d="M120 20 L220 100 L20 100 Z" fill="#2ecc71" opacity="0.2"/>
+                <rect x="100" y="40" width="40" height="60" fill="#082b1c"/>
+                <path d="M120 10 L150 40 L90 40 Z" fill="#27ae60"/>
+                <circle cx="120" cy="65" r="12" fill="#FFD700"/>
+                <path d="M120 58 L117 65 L123 65 L120 72" stroke="#082b1c" stroke-width="2" fill="none"/>
+            </svg>
+            
+            <p style="color: var(--text-gray); margin-bottom: 25px; font-weight: 500;">Create new account</p>
+        </div>
+
+        <div class="form-group">
+            <label>Full Name</label>
+            <div class="input-wrapper">
+                <i class="fas fa-user"></i>
+                <input type="text" id="reg-name" placeholder="John Doe">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Phone Number</label>
+            <div class="phone-group">
+                <div class="input-wrapper phone-code">
+                    <select id="reg-country-code">
+                      <option value="+93">+93 (Afghanistan 🇦🇫)</option>
+<option value="+355">+355 (Albania 🇦🇱)</option>
+<option value="+213">+213 (Algeria 🇩🇿)</option>
+<option value="+1684">+1684 (American Samoa 🇦🇸)</option>
+<option value="+376">+376 (Andorra 🇦🇩)</option>
+<option value="+244">+244 (Angola 🇦🇴)</option>
+<option value="+1264">+1264 (Anguilla 🇦🇮)</option>
+<option value="+1268">+1268 (Antigua and Barbuda 🇦🇬)</option>
+<option value="+54">+54 (Argentina 🇦🇷)</option>
+<option value="+374">+374 (Armenia 🇦🇲)</option>
+<option value="+297">+297 (Aruba 🇦🇼)</option>
+<option value="+61">+61 (Australia 🇦🇺)</option>
+<option value="+43">+43 (Austria 🇦🇹)</option>
+<option value="+994">+994 (Azerbaijan 🇦🇿)</option>
+<option value="+1242">+1242 (Bahamas 🇧🇸)</option>
+<option value="+973">+973 (Bahrain 🇧🇭)</option>
+<option value="+880">+880 (Bangladesh 🇧🇩)</option>
+<option value="+1246">+1246 (Barbados 🇧🇧)</option>
+<option value="+375">+375 (Belarus 🇧🇾)</option>
+<option value="+32">+32 (Belgium 🇧🇪)</option>
+<option value="+501">+501 (Belize 🇧🇿)</option>
+<option value="+229">+229 (Benin 🇧🇯)</option>
+<option value="+1441">+1441 (Bermuda 🇧🇲)</option>
+<option value="+975">+975 (Bhutan 🇧🇹)</option>
+<option value="+591">+591 (Bolivia 🇧🇴)</option>
+<option value="+387">+387 (Bosnia and Herzegovina 🇧🇦)</option>
+<option value="+267">+267 (Botswana 🇧🇼)</option>
+<option value="+55">+55 (Brazil 🇧🇷)</option>
+<option value="+673">+673 (Brunei 🇧🇳)</option>
+<option value="+359" selected>+359 (Bulgaria 🇧🇬)</option>
+<option value="+226">+226 (Burkina Faso 🇧🇫)</option>
+<option value="+257">+257 (Burundi 🇧🇮)</option>
+<option value="+855">+855 (Cambodia 🇰🇭)</option>
+<option value="+237">+237 (Cameroon 🇨🇲)</option>
+<option value="+1">+1 (Canada 🇨🇦)</option>
+<option value="+238">+238 (Cape Verde 🇨🇻)</option>
+<option value="+1345">+1345 (Cayman Islands 🇰🇾)</option>
+<option value="+236">+236 (Central African Republic 🇨🇫)</option>
+<option value="+235">+235 (Chad 🇹🇩)</option>
+<option value="+56">+56 (Chile 🇨🇱)</option>
+<option value="+86">+86 (China 🇨🇳)</option>
+<option value="+57">+57 (Colombia 🇨🇴)</option>
+<option value="+269">+269 (Comoros 🇰🇲)</option>
+<option value="+242">+242 (Congo 🇨🇬)</option>
+<option value="+243">+243 (DR Congo 🇨🇩)</option>
+<option value="+506">+506 (Costa Rica 🇨🇷)</option>
+<option value="+385">+385 (Croatia 🇭🇷)</option>
+<option value="+53">+53 (Cuba 🇨🇺)</option>
+<option value="+357">+357 (Cyprus 🇨🇾)</option>
+<option value="+420">+420 (Czech Republic 🇨🇿)</option>
+<option value="+45">+45 (Denmark 🇩🇰)</option>
+<option value="+253">+253 (Djibouti 🇩🇯)</option>
+<option value="+1767">+1767 (Dominica 🇩🇲)</option>
+<option value="+1809">+1809 (Dominican Republic 🇩🇴)</option>
+<option value="+593">+593 (Ecuador 🇪🇨)</option>
+<option value="+20">+20 (Egypt 🇪🇬)</option>
+<option value="+503">+503 (El Salvador 🇸🇻)</option>
+<option value="+240">+240 (Equatorial Guinea 🇬🇶)</option>
+<option value="+291">+291 (Eritrea 🇪🇷)</option>
+<option value="+372">+372 (Estonia 🇪🇪)</option>
+<option value="+251">+251 (Ethiopia 🇪🇹)</option>
+<option value="+679">+679 (Fiji 🇫🇯)</option>
+<option value="+358">+358 (Finland 🇫🇮)</option>
+<option value="+33">+33 (France 🇫🇷)</option>
+<option value="+241">+241 (Gabon 🇬🇦)</option>
+<option value="+220">+220 (Gambia 🇬🇲)</option>
+<option value="+995">+995 (Georgia 🇬🇪)</option>
+<option value="+49">+49 (Germany 🇩🇪)</option>
+<option value="+233">+233 (Ghana 🇬🇭)</option>
+<option value="+350">+350 (Gibraltar 🇬🇮)</option>
+<option value="+30">+30 (Greece 🇬🇷)</option>
+<option value="+299">+299 (Greenland 🇬🇱)</option>
+<option value="+1473">+1473 (Grenada 🇬🇩)</option>
+<option value="+502">+502 (Guatemala 🇬🇹)</option>
+<option value="+224">+224 (Guinea 🇬🇳)</option>
+<option value="+245">+245 (Guinea-Bissau 🇬🇼)</option>
+<option value="+592">+592 (Guyana 🇬🇾)</option>
+<option value="+509">+509 (Haiti 🇭🇹)</option>
+<option value="+504">+504 (Honduras 🇭🇳)</option>
+<option value="+852">+852 (Hong Kong 🇭🇰)</option>
+<option value="+36">+36 (Hungary 🇭🇺)</option>
+<option value="+354">+354 (Iceland 🇮🇸)</option>
+<option value="+91">+91 (India 🇮🇳)</option>
+<option value="+62">+62 (Indonesia 🇮🇩)</option>
+<option value="+98">+98 (Iran 🇮🇷)</option>
+<option value="+964">+964 (Iraq 🇮🇶)</option>
+<option value="+353">+353 (Ireland 🇮🇪)</option>
+<option value="+972">+972 (Israel 🇮🇱)</option>
+<option value="+39">+39 (Italy 🇮🇹)</option>
+<option value="+225">+225 (Ivory Coast 🇨🇮)</option>
+<option value="+1876">+1876 (Jamaica 🇯🇲)</option>
+<option value="+81">+81 (Japan 🇯🇵)</option>
+<option value="+962">+962 (Jordan 🇯🇴)</option>
+<option value="+7">+7 (Kazakhstan 🇰🇿)</option>
+<option value="+254">+254 (Kenya 🇰🇪)</option>
+<option value="+686">+686 (Kiribati 🇰🇮)</option>
+<option value="+965">+965 (Kuwait 🇰🇼)</option>
+<option value="+996">+996 (Kyrgyzstan 🇰🇬)</option>
+<option value="+856">+856 (Laos 🇱🇦)</option>
+<option value="+371">+371 (Latvia 🇱🇻)</option>
+<option value="+961">+961 (Lebanon 🇱🇧)</option>
+<option value="+266">+266 (Lesotho 🇱🇸)</option>
+<option value="+231">+231 (Liberia 🇱🇷)</option>
+<option value="+218">+218 (Libya 🇱🇾)</option>
+<option value="+423">+423 (Liechtenstein 🇱🇮)</option>
+<option value="+370">+370 (Lithuania 🇱🇹)</option>
+<option value="+352">+352 (Luxembourg 🇱🇺)</option>
+<option value="+853">+853 (Macau 🇲🇴)</option>
+<option value="+389">+389 (North Macedonia 🇲🇰)</option>
+<option value="+261">+261 (Madagascar 🇲🇬)</option>
+<option value="+265">+265 (Malawi 🇲🇼)</option>
+<option value="+60">+60 (Malaysia 🇲🇾)</option>
+<option value="+960">+960 (Maldives 🇲🇻)</option>
+<option value="+223">+223 (Mali 🇲🇱)</option>
+<option value="+356">+356 (Malta 🇲🇹)</option>
+<option value="+222">+222 (Mauritania 🇲🇷)</option>
+<option value="+230">+230 (Mauritius 🇲🇺)</option>
+<option value="+52">+52 (Mexico 🇲🇽)</option>
+<option value="+373">+373 (Moldova 🇲🇩)</option>
+<option value="+377">+377 (Monaco 🇲🇨)</option>
+<option value="+976">+976 (Mongolia 🇲🇳)</option>
+<option value="+382">+382 (Montenegro 🇲🇪)</option>
+<option value="+212">+212 (Morocco 🇲🇦)</option>
+<option value="+258">+258 (Mozambique 🇲🇿)</option>
+<option value="+95">+95 (Myanmar 🇲🇲)</option>
+<option value="+264">+264 (Namibia 🇳🇦)</option>
+<option value="+977">+977 (Nepal 🇳🇵)</option>
+<option value="+31">+31 (Netherlands 🇳🇱)</option>
+<option value="+64">+64 (New Zealand 🇳🇿)</option>
+<option value="+505">+505 (Nicaragua 🇳🇮)</option>
+<option value="+227">+227 (Niger 🇳🇪)</option>
+<option value="+234">+234 (Nigeria 🇳🇬)</option>
+<option value="+850">+850 (North Korea 🇰🇵)</option>
+<option value="+47">+47 (Norway 🇳🇴)</option>
+<option value="+968">+968 (Oman 🇴🇲)</option>
+<option value="+92">+92 (Pakistan 🇵🇰)</option>
+<option value="+970">+970 (Palestine 🇵🇸)</option>
+<option value="+507">+507 (Panama 🇵🇦)</option>
+<option value="+675">+675 (Papua New Guinea 🇵🇬)</option>
+<option value="+595">+595 (Paraguay 🇵🇾)</option>
+<option value="+51">+51 (Peru 🇵🇪)</option>
+<option value="+63">+63 (Philippines 🇵🇭)</option>
+<option value="+48">+48 (Poland 🇵🇱)</option>
+<option value="+351">+351 (Portugal 🇵🇹)</option>
+<option value="+1787">+1787 (Puerto Rico 🇵🇷)</option>
+<option value="+974">+974 (Qatar 🇶🇦)</option>
+<option value="+40">+40 (Romania 🇷🇴)</option>
+<option value="+7">+7 (Russia 🇷🇺)</option>
+<option value="+250">+250 (Rwanda 🇷🇼)</option>
+<option value="+966">+966 (Saudi Arabia 🇸🇦)</option>
+<option value="+221">+221 (Senegal 🇸🇳)</option>
+<option value="+381">+381 (Serbia 🇷🇸)</option>
+<option value="+248">+248 (Seychelles 🇸🇨)</option>
+<option value="+232">+232 (Sierra Leone 🇸🇱)</option>
+<option value="+65">+65 (Singapore 🇸🇬)</option>
+<option value="+421">+421 (Slovakia 🇸🇰)</option>
+<option value="+386">+386 (Slovenia 🇸🇮)</option>
+<option value="+252">+252 (Somalia 🇸🇴)</option>
+<option value="+27">+27 (South Africa 🇿🇦)</option>
+<option value="+82">+82 (South Korea 🇰🇷)</option>
+<option value="+34">+34 (Spain 🇪🇸)</option>
+<option value="+94">+94 (Sri Lanka 🇱🇰)</option>
+<option value="+249">+249 (Sudan 🇸🇩)</option>
+<option value="+46">+46 (Sweden 🇸🇪)</option>
+<option value="+41">+41 (Switzerland 🇨🇭)</option>
+<option value="+963">+963 (Syria 🇸🇾)</option>
+<option value="+886">+886 (Taiwan 🇹🇼)</option>
+<option value="+992">+992 (Tajikistan 🇹🇯)</option>
+<option value="+255">+255 (Tanzania 🇹🇿)</option>
+<option value="+66">+66 (Thailand 🇹🇭)</option>
+<option value="+228">+228 (Togo 🇹🇬)</option>
+<option value="+216">+216 (Tunisia 🇹🇳)</option>
+<option value="+90">+90 (Turkey 🇹🇷)</option>
+<option value="+993">+993 (Turkmenistan 🇹🇲)</option>
+<option value="+256">+256 (Uganda 🇺🇬)</option>
+<option value="+380">+380 (Ukraine 🇺🇦)</option>
+<option value="+971">+971 (United Arab Emirates 🇦🇪)</option>
+<option value="+44">+44 (United Kingdom 🇬🇧)</option>
+<option value="+1">+1 (United States 🇺🇸)</option>
+<option value="+598">+598 (Uruguay 🇺🇾)</option>
+<option value="+998">+998 (Uzbekistan 🇺🇿)</option>
+<option value="+39">+39 (Vatican City 🇻🇦)</option>
+<option value="+58">+58 (Venezuela 🇻🇪)</option>
+<option value="+84">+84 (Vietnam 🇻🇳)</option>
+<option value="+967">+967 (Yemen 🇾🇪)</option>
+<option value="+260">+260 (Zambia 🇿🇲)</option>
+<option value="+263">+263 (Zimbabwe 🇿🇼)</option>
+  
+
+                        </select>
                 </div>
                 <div class="input-wrapper phone-number">
                     <input type="tel" id="reg-phone" placeholder="871234567">
@@ -1007,7 +1528,7 @@
                 <i class="fas fa-sync-alt"></i> Update User Data
             </button>
         </div>
-        
+       
         <button class="btn btn-outline" style="border-color: var(--text-gray); color: var(--text-gray);" onclick="appLogic.logout()">
             Exit Admin Panel
         </button>
@@ -1057,6 +1578,10 @@
             </div>
         </div>
 
+        <button class="btn" onclick="appLogic.openCalendarModal()" style="margin-top: 15px; box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3); background-color: var(--success-green); color: white;">
+            <i class="fas fa-calendar-check"></i> Daily Check-in Rewards
+        </button>
+
         <button class="btn btn-outline" onclick="appLogic.logout()" style="margin-top: 10px; border-color: var(--error-red); color: var(--error-red);">
             <i class="fas fa-sign-out-alt"></i> Secure Logout
         </button>
@@ -1073,6 +1598,10 @@
             </h1>
             <p style="font-size: 12px; color: var(--text-gray);">USDT (Tether USD)</p>
             
+            <p id="withdrawal-fee-text" style="font-size: 13px; color: var(--bright-yellow); margin-top: 15px; text-align: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+                <i class="fas fa-info-circle"></i> Standard Withdrawal Fee: <b>10%</b>
+            </p>
+
             <div id="withdrawal-status-container" style="display: none; margin-top: 25px; padding: 12px; border-radius: var(--border-radius-sm); background: rgba(255, 77, 77, 0.2); border: 1px solid rgba(255, 77, 77, 0.3);">
                 <div style="display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 13px;">
                     <i id="lock-icon" class="fas fa-lock" style="color: var(--error-red);"></i>
@@ -1106,9 +1635,7 @@
     <div id="packages-view" class="view">
         <h2 class="text-center">Energy Store</h2>
         <p class="text-center text-gray" style="margin-bottom: 25px;">Invest in charging stations and earn daily.</p>
-        
-        <div id="packages-container">
-            </div>
+        <div id="packages-container"></div>
     </div>
 
     <div id="affiliate-view" class="view">
@@ -1203,9 +1730,29 @@
         </div>
     </div>
 
-</div>
+    <div id="calendar-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px; padding: 25px 20px;">
+            <span class="close-modal" onclick="appLogic.closeCalendarModal()">&times;</span>
+            <h3 style="margin-bottom: 10px; color: var(--bright-yellow);">365 Days Challenge</h3>
+            <p style="color: var(--text-gray); font-size: 12px; margin-bottom: 15px;">Check in daily to unlock rewards!</p>
+            
+            <div class="calendar-grid" id="calendar-grid">
+                </div>
+            
+            <button class="btn" id="btn-checkin" onclick="appLogic.checkIn()">
+                <i class="fas fa-check-square"></i> Register Now
+            </button>
+            
+            <div class="rewards-text" style="margin-top: 20px; color: var(--text-light); background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px;">
+                <p>🎁 Log in for a total of 7 days to get €5</p>
+                <p>🎁 Log in for 40 days to get -5% withdrawal fee</p>
+                <p>🎁 Log in for 180 days to get free VIP 1</p>
+                <p>📱 Log in for 365 days to get a new iPhone 17 Pro Max</p>
+            </div>
+        </div>
+    </div>
 
-<script type="module">
+</div> <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
     import { getDatabase, ref, set, get, onValue, update } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
@@ -1218,7 +1765,6 @@
         messagingSenderId: "1084198944849",
         appId: "1:1084198944849:web:57fc342554a08ed1dd3870"
     };
-
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
@@ -1247,7 +1793,8 @@
         adminClickCount: 0,
         adminClickTimer: null,
         currentUserData: null,
-        withdrawalUnlocked: false, // Default state is locked, but hidden from UI initially
+        withdrawalUnlocked: false,
+        calendarInterval: null,
 
         init() {
             this.renderPackages();
@@ -1266,7 +1813,7 @@
             let iconClass = 'fas fa-info-circle';
             if (type === 'success') iconClass = 'fas fa-check-circle';
             if (type === 'error') iconClass = 'fas fa-exclamation-circle';
-
+            
             toast.innerHTML = `<i class="${iconClass}"></i> <div>${message}</div>`;
             container.appendChild(toast);
 
@@ -1346,7 +1893,6 @@
 
             if(!name || !phone || !password) return this.showToast("Please fill all required fields!", "error");
             if(!this.validatePassword(password)) return;
-
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
@@ -1377,6 +1923,8 @@
                     lastProfitUpdate: Date.now(),
                     teamSize: 0,
                     earnedFromTeam: 0,
+                    checkInCount: 0,
+                    lastCheckIn: 0,
                     createdAt: new Date().toISOString()
                 });
                 
@@ -1425,15 +1973,15 @@
             const countryCode = document.getElementById('login-country-code').value;
             const phone = document.getElementById('login-phone').value.replace(/\s+/g, '');
             const password = document.getElementById('login-password').value;
-
+            
             if(!phone || !password) return this.showToast("Enter phone and password!", "error");
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
-
+            
             const fullPhone = countryCode + phone;
             const dbKey = fullPhone.replace('+', '');
-
+            
             try {
                 const userRef = window.fref(window.fdb, 'users/' + dbKey);
                 const snapshot = await window.fget(userRef);
@@ -1508,6 +2056,19 @@
 
                     this.processDailyProfit(uid, data);
                     this.verifyWithdrawalEligibility(data.myCode);
+                    
+                    // Актуализация на таксата за теглене (40 дни)
+                    const checkIns = data.checkInCount || 0;
+                    const feeText = document.getElementById('withdrawal-fee-text');
+                    if(feeText) {
+                        if(checkIns >= 40) {
+                            feeText.innerHTML = '<i class="fas fa-percent"></i> Withdrawal Fee: <b>5%</b> (Discount Unlocked!)';
+                            feeText.style.color = 'var(--success-green)';
+                        } else {
+                            feeText.innerHTML = '<i class="fas fa-info-circle"></i> Standard Withdrawal Fee: <b>10%</b>';
+                            feeText.style.color = 'var(--bright-yellow)';
+                        }
+                    }
                 }
             });
         },
@@ -1519,12 +2080,12 @@
             const lastUpdate = data.lastProfitUpdate || Date.now();
             const now = Date.now();
             const msInDay = 24 * 60 * 60 * 1000;
-
+            
             if (now - lastUpdate >= msInDay) {
                 const daysPassed = Math.floor((now - lastUpdate) / msInDay);
                 const profitEarned = daysPassed * parseFloat(data.dailyProfit);
                 const newBalance = parseFloat(data.balance || 0) + profitEarned;
-
+                
                 try {
                     await window.fupdate(window.fref(window.fdb, 'users/' + uid), {
                         balance: newBalance,
@@ -1537,9 +2098,6 @@
             }
         },
 
-        /**
-         * Checks referral status silently in background
-         */
         async verifyWithdrawalEligibility(myCode) {
             if(!myCode) return;
             try {
@@ -1560,8 +2118,6 @@
                 }
 
                 this.withdrawalUnlocked = hasQualifiedReferral;
-                
-                // If they previously triggered the error, but just now got a referral, hide the error.
                 if(hasQualifiedReferral) {
                     document.getElementById('withdrawal-status-container').style.display = 'none';
                 }
@@ -1571,25 +2127,20 @@
             }
         },
 
-        /**
-         * Triggered when user clicks Withdraw
-         */
         async withdraw() {
             const balance = parseFloat(document.getElementById('wallet-balance').innerText);
             const withdrawAddress = document.getElementById('withdraw-address').value.trim();
             const uid = localStorage.getItem('uid'); 
             const phone = localStorage.getItem('userPhone');
-
+            
             if(!withdrawAddress || withdrawAddress.length < 15) {
                 return this.showToast("Please enter a valid crypto wallet address!", "error");
             }
 
-            // CHECK 1: Must have 100 USDT
             if(balance < 100) {
                 return this.showToast("Minimum withdrawal amount is 100 USDT.", "error");
             }
 
-            // CHECK 2: Must have an active referral (THIS IS WHERE WE SHOW THE RED WARNING)
             if(!this.withdrawalUnlocked) {
                 document.getElementById('withdrawal-status-container').style.display = 'block';
                 return this.showToast("Withdrawal locked! See requirements above.", "error");
@@ -1598,7 +2149,7 @@
             const btn = document.getElementById('btn-withdraw');
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
+            
             try {
                 const requestId = 'req_' + Date.now();
                 await window.fset(window.fref(window.fdb, 'withdrawals/' + requestId), {
@@ -1609,11 +2160,11 @@
                     status: "pending",
                     timestamp: new Date().toISOString()
                 });
-
+                
                 await window.fupdate(window.fref(window.fdb, 'users/' + uid), {
                     balance: 0
                 });
-
+                
                 this.showToast("Withdrawal request sent successfully!", "success");
                 document.getElementById('withdraw-address').value = '';
 
@@ -1631,9 +2182,9 @@
             this.adminClickTimer = setTimeout(() => { 
                 this.adminClickCount = 0; 
             }, 1500);
-
+            
             if(this.adminClickCount >= 5) {
-                this.adminClickCount = 0; 
+                this.adminClickCount = 0;
                 const pass = prompt("System Administrator Authentication Required:\nEnter Password:");
                 
                 if(pass === "SofiaDubaiLondonOneMilion2026") {
@@ -1655,7 +2206,7 @@
             
             const dbKey = phoneRaw.replace(/\s+/g, '').replace('+', '');
             const profit = parseFloat(profitStr) || 0;
-
+            
             try {
                 const userRef = window.fref(window.fdb, 'users/' + dbKey);
                 const snap = await window.fget(userRef);
@@ -1669,13 +2220,13 @@
                     dailyProfit: profit,
                     lastProfitUpdate: Date.now() 
                 });
-
+                
                 this.showToast(`User updated successfully! Package: ${pkg}, Daily: $${profit}`, "success");
                 
                 document.getElementById('admin-target-phone').value = '';
                 document.getElementById('admin-package-select').value = 'none';
                 document.getElementById('admin-daily-profit').value = '';
-
+                
             } catch(e) {
                 this.showToast("Admin update error: " + e.message, "error");
             }
@@ -1683,7 +2234,6 @@
 
         openPaymentModal(pkgName, price) {
             document.getElementById('modal-pkg-name').innerText = `${pkgName} - ${price} USDT`;
-            
             const overlay = document.getElementById('payment-modal');
             overlay.style.display = 'flex';
             setTimeout(() => overlay.classList.add('show'), 10);
@@ -1712,6 +2262,105 @@
         confirmSent() {
             this.showToast("Payment confirmation sent. Please allow 5-15 mins for blockchain network verification.", "info");
             this.closeModal();
+        },
+
+        // ==========================================
+        // NEW CALENDAR AND REWARD LOGIC
+        // ==========================================
+
+        openCalendarModal() {
+            this.renderCalendar();
+            const overlay = document.getElementById('calendar-modal');
+            overlay.style.display = 'flex';
+            setTimeout(() => overlay.classList.add('show'), 10);
+            
+            // Опресняваме таймера на всяка секунда, докато е отворено
+            this.calendarInterval = setInterval(() => this.updateCheckInUI(), 1000);
+        },
+
+        closeCalendarModal() {
+            clearInterval(this.calendarInterval);
+            const overlay = document.getElementById('calendar-modal');
+            overlay.classList.remove('show');
+            setTimeout(() => overlay.style.display = 'none', 300);
+        },
+
+        renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
+            const count = this.currentUserData?.checkInCount || 0;
+            
+            for(let i=1; i<=365; i++) {
+                const div = document.createElement('div');
+                div.className = 'day-box' + (i <= count ? ' checked' : '');
+                div.innerText = i;
+                grid.appendChild(div);
+            }
+            this.updateCheckInUI();
+        },
+
+        updateCheckInUI() {
+            const btn = document.getElementById('btn-checkin');
+            if(!this.currentUserData) return;
+            const lastCheckIn = this.currentUserData.lastCheckIn || 0;
+            const now = Date.now();
+            const msInDay = 24 * 60 * 60 * 1000;
+            const timeLeft = msInDay - (now - lastCheckIn);
+
+            if(timeLeft > 0 && lastCheckIn !== 0) {
+                btn.disabled = true;
+                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                const mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                btn.innerHTML = `<i class="fas fa-clock"></i> Next in ${hours}h ${mins}m ${secs}s`;
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-check-square"></i> Register Now`;
+            }
+        },
+
+        async checkIn() {
+            if(!this.currentUserData) return;
+            const lastCheckIn = this.currentUserData.lastCheckIn || 0;
+            const count = this.currentUserData.checkInCount || 0;
+            const now = Date.now();
+            const msInDay = 24 * 60 * 60 * 1000;
+
+            if(now - lastCheckIn < msInDay && lastCheckIn !== 0) {
+                return this.showToast("You can only check in once every 24 hours.", "error");
+            }
+
+            const newCount = count + 1;
+            const uid = localStorage.getItem('uid');
+            const updates = {
+                checkInCount: newCount,
+                lastCheckIn: now
+            };
+
+            // Логика за наградите
+            if (newCount === 7) {
+                updates.balance = parseFloat(this.currentUserData.balance || 0) + 5;
+                this.showToast("Reward Unlocked: €5 added to your balance!", "success");
+            } else if (newCount === 40) {
+                this.showToast("Reward Unlocked: Withdrawal fee reduced to 5%!", "success");
+            } else if (newCount === 180) {
+                updates.activePackage = "VIP 1";
+                updates.dailyProfit = 100; // Добавяме и дневната печалба за VIP 1 автоматично
+                this.showToast("Reward Unlocked: Free VIP 1 Activated!", "success");
+            } else if (newCount === 365) {
+                this.showToast("JACKPOT! Please contact support to claim your iPhone 17 Pro Max!", "success");
+            } else {
+                this.showToast(`Check-in successful! Day ${newCount} completed.`, "success");
+            }
+
+            try {
+                await window.fupdate(window.fref(window.fdb, 'users/' + uid), updates);
+                this.currentUserData.checkInCount = newCount;
+                this.currentUserData.lastCheckIn = now;
+                this.renderCalendar();
+            } catch (error) {
+                this.showToast("Failed to check in: " + error.message, "error");
+            }
         }
     };
 
