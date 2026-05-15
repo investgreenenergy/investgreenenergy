@@ -12,7 +12,6 @@
            1. CSS VARIABLES & THEME SETTINGS
            ========================================================================== */
         :root {
-           
             --dark-green: #082b1c;
             --dark-green-light: #12452f;
             --dark-green-hover: #185c3f;
@@ -539,7 +538,7 @@
             <div class="phone-group">
                 <div class="input-wrapper phone-code">
                     <select id="login-country-code">
-                      <option value="+355">+355 (Albania 🇦🇱)</option>
+                       <option value="+355">+355 (Albania 🇦🇱)</option>
 <option value="+213">+213 (Algeria 🇩🇿)</option>
 <option value="+1684">+1684 (American Samoa 🇦🇸)</option>
 <option value="+376">+376 (Andorra 🇦🇩)</option>
@@ -775,7 +774,7 @@
             <div class="phone-group">
                 <div class="input-wrapper phone-code">
                     <select id="reg-country-code">
-                       <option value="+355">+355 (Albania 🇦🇱)</option>
+                        <option value="+355">+355 (Albania 🇦🇱)</option>
 <option value="+213">+213 (Algeria 🇩🇿)</option>
 <option value="+1684">+1684 (American Samoa 🇦🇸)</option>
 <option value="+376">+376 (Andorra 🇦🇩)</option>
@@ -1092,6 +1091,112 @@
             <i class="fas fa-calendar-check"></i> Daily Check-in Rewards
         </button>
 
+       <div class="energy-wrapper">
+    <style>
+        .energy-wrapper {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 20px auto;
+            text-align: center;
+        }
+        .modern-btn {
+            background: linear-gradient(135deg, #2e7d32, #4caf50);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .modern-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        .table-container {
+            background: linear-gradient(to bottom, #dcedc8, #aed581);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+            display: none;
+        }
+        .table-title {
+            font-size: 28px;
+            font-family: 'Times New Roman', Times, serif;
+            margin-bottom: 20px;
+            color: #000;
+        }
+        .table-responsive { overflow-x: auto; }
+        .energy-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+            font-size: 15px;
+        }
+        .energy-table th {
+            background-color: #388e3c;
+            color: white;
+            padding: 12px 5px;
+            border: 1px solid #c8e6c9;
+        }
+        .energy-table td {
+            padding: 10px 5px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .plan-name { text-align: left; font-weight: bold; padding-left: 10px !important; }
+        .row-dark { background-color: #607d8b; color: white; }
+        .row-light { background-color: #c8e6c9; color: #000; }
+        .row-ultimate { background-color: #1b5e20; color: white; font-weight: bold; }
+    </style>
+
+    <button id="energyPlanBtn" class="modern-btn">⚡ View Energy Plans</button>
+
+    <div id="energyTableContainer" class="table-container">
+        <h2 class="table-title">Income from Green Energy</h2>
+        <div class="table-responsive">
+            <table class="energy-table">
+                <thead>
+                    <tr>
+                        <th>Plan</th>
+                        <th>Price</th>
+                        <th>Daily Income</th>
+                        <th>Monthly Income</th>
+                        <th>Net Profit</th>
+                        <th>ROI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row-dark"><td class="plan-name">⚡ BASIC - 1</td><td>80€</td><td>3€</td><td>90€</td><td>+10€</td><td>26 days</td></tr>
+                    <tr class="row-light"><td class="plan-name">⚡ BASIC - 2</td><td>200€</td><td>9€</td><td>270€</td><td>+70€</td><td>22 days</td></tr>
+                    <tr class="row-dark"><td class="plan-name">⚡ BASIC - 3</td><td>500€</td><td>23€</td><td>690€</td><td>+190€</td><td>21 days</td></tr>
+                    <tr class="row-light"><td class="plan-name">⚡ VIP - 1</td><td>1200€</td><td>59€</td><td>1770€</td><td>+570€</td><td>20 days</td></tr>
+                    <tr class="row-dark"><td class="plan-name">⚡ VIP - 2</td><td>3000€</td><td>165€</td><td>4950€</td><td>+1950€</td><td>18 days</td></tr>
+                    <tr class="row-light"><td class="plan-name">⚡ VIP - 3</td><td>6500€</td><td>430€</td><td>12900€</td><td>+6400€</td><td>15 days</td></tr>
+                    <tr class="row-ultimate"><td class="plan-name">⚡ ULTIMATE ENERGY</td><td>20000€</td><td>1500€</td><td>45000€</td><td>+25000€</td><td>13 days</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('energyPlanBtn').addEventListener('click', function() {
+            var container = document.getElementById('energyTableContainer');
+            if (container.style.display === 'none' || container.style.display === '') {
+                container.style.display = 'block';
+                this.innerText = 'Hide plans';
+            } else {
+                container.style.display = 'none';
+                this.innerText = '⚡ View Energy Plans';
+            }
+        });
+    </script>
+</div>
+
+        
         <button class="btn btn-outline" onclick="appLogic.logout()" style="margin-top: 10px; border-color: var(--error-red); color: var(--error-red);">
             <i class="fas fa-sign-out-alt"></i> Secure Logout
         </button>
@@ -1297,7 +1402,6 @@
         { id: 'vip3', name: 'VIP 3', price: 6500, daily: 430, monthly: 12900 },
         { id: 'ultimate', name: 'Ultimate Energy', price: 20000, daily: 1500, monthly: 45000 }
     ];
-
     const appLogic = {
         
         adminClickCount: 0,
@@ -1323,7 +1427,6 @@
             let iconClass = 'fas fa-info-circle';
             if (type === 'success') iconClass = 'fas fa-check-circle';
             if (type === 'error') iconClass = 'fas fa-exclamation-circle';
-            
             toast.innerHTML = `<i class="${iconClass}"></i> <div>${message}</div>`;
             container.appendChild(toast);
 
@@ -1409,7 +1512,6 @@
             const fullPhone = countryCode + phone;
             const dbKey = fullPhone.replace('+', '');
             const generatedCode = 'EN' + Math.floor(Math.random()*9000 + 1000);
-            
             try {
                 const userRef = window.fref(window.fdb, 'users/' + dbKey);
                 const snapshot = await window.fget(userRef);
@@ -1437,7 +1539,6 @@
                     lastCheckIn: 0,
                     createdAt: new Date().toISOString()
                 });
-                
                 this.showToast("Welcome to green energy! Registration successful.", "success");
                 
                 if(inviteCode && inviteCode !== "none") {
@@ -1483,15 +1584,12 @@
             const countryCode = document.getElementById('login-country-code').value;
             const phone = document.getElementById('login-phone').value.replace(/\s+/g, '');
             const password = document.getElementById('login-password').value;
-            
             if(!phone || !password) return this.showToast("Enter phone and password!", "error");
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
-            
             const fullPhone = countryCode + phone;
             const dbKey = fullPhone.replace('+', '');
-            
             try {
                 const userRef = window.fref(window.fdb, 'users/' + dbKey);
                 const snapshot = await window.fget(userRef);
@@ -1566,7 +1664,6 @@
 
                     this.processDailyProfit(uid, data);
                     this.verifyWithdrawalEligibility(data.myCode);
-                    
                     // Актуализация на таксата за теглене (40 дни)
                     const checkIns = data.checkInCount || 0;
                     const feeText = document.getElementById('withdrawal-fee-text');
@@ -1590,12 +1687,10 @@
             const lastUpdate = data.lastProfitUpdate || Date.now();
             const now = Date.now();
             const msInDay = 24 * 60 * 60 * 1000;
-            
             if (now - lastUpdate >= msInDay) {
                 const daysPassed = Math.floor((now - lastUpdate) / msInDay);
                 const profitEarned = daysPassed * parseFloat(data.dailyProfit);
                 const newBalance = parseFloat(data.balance || 0) + profitEarned;
-                
                 try {
                     await window.fupdate(window.fref(window.fdb, 'users/' + uid), {
                         balance: newBalance,
@@ -1642,7 +1737,6 @@
             const withdrawAddress = document.getElementById('withdraw-address').value.trim();
             const uid = localStorage.getItem('uid'); 
             const phone = localStorage.getItem('userPhone');
-            
             if(!withdrawAddress || withdrawAddress.length < 15) {
                 return this.showToast("Please enter a valid crypto wallet address!", "error");
             }
@@ -1659,7 +1753,6 @@
             const btn = document.getElementById('btn-withdraw');
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            
             try {
                 const requestId = 'req_' + Date.now();
                 await window.fset(window.fref(window.fdb, 'withdrawals/' + requestId), {
@@ -1670,11 +1763,9 @@
                     status: "pending",
                     timestamp: new Date().toISOString()
                 });
-                
                 await window.fupdate(window.fref(window.fdb, 'users/' + uid), {
                     balance: 0
                 });
-                
                 this.showToast("Withdrawal request sent successfully!", "success");
                 document.getElementById('withdraw-address').value = '';
 
@@ -1692,7 +1783,6 @@
             this.adminClickTimer = setTimeout(() => { 
                 this.adminClickCount = 0; 
             }, 1500);
-            
             if(this.adminClickCount >= 5) {
                 this.adminClickCount = 0;
                 const pass = prompt("System Administrator Authentication Required:\nEnter Password:");
@@ -1713,10 +1803,8 @@
             const profitStr = document.getElementById('admin-daily-profit').value;
             
             if(!phoneRaw) return this.showToast("Enter a target phone number.", "error");
-            
             const dbKey = phoneRaw.replace(/\s+/g, '').replace('+', '');
             const profit = parseFloat(profitStr) || 0;
-            
             try {
                 const userRef = window.fref(window.fdb, 'users/' + dbKey);
                 const snap = await window.fget(userRef);
@@ -1730,13 +1818,11 @@
                     dailyProfit: profit,
                     lastProfitUpdate: Date.now() 
                 });
-                
                 this.showToast(`User updated successfully! Package: ${pkg}, Daily: $${profit}`, "success");
                 
                 document.getElementById('admin-target-phone').value = '';
                 document.getElementById('admin-package-select').value = 'none';
                 document.getElementById('admin-daily-profit').value = '';
-                
             } catch(e) {
                 this.showToast("Admin update error: " + e.message, "error");
             }
@@ -1783,7 +1869,6 @@
             const overlay = document.getElementById('calendar-modal');
             overlay.style.display = 'flex';
             setTimeout(() => overlay.classList.add('show'), 10);
-            
             // Опресняваме таймера на всяка секунда, докато е отворено
             this.calendarInterval = setInterval(() => this.updateCheckInUI(), 1000);
         },
@@ -1816,7 +1901,6 @@
             const now = Date.now();
             const msInDay = 24 * 60 * 60 * 1000;
             const timeLeft = msInDay - (now - lastCheckIn);
-
             if(timeLeft > 0 && lastCheckIn !== 0) {
                 btn.disabled = true;
                 const hours = Math.floor(timeLeft / (1000 * 60 * 60));
@@ -1835,7 +1919,6 @@
             const count = this.currentUserData.checkInCount || 0;
             const now = Date.now();
             const msInDay = 24 * 60 * 60 * 1000;
-
             if(now - lastCheckIn < msInDay && lastCheckIn !== 0) {
                 return this.showToast("You can only check in once every 24 hours.", "error");
             }
@@ -1846,7 +1929,6 @@
                 checkInCount: newCount,
                 lastCheckIn: now
             };
-
             // Логика за наградите
             if (newCount === 7) {
                 updates.balance = parseFloat(this.currentUserData.balance || 0) + 5;
@@ -1873,7 +1955,6 @@
             }
         }
     };
-
     window.addEventListener('DOMContentLoaded', () => {
         appLogic.init();
     });
