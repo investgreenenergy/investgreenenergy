@@ -1067,7 +1067,7 @@
         withdrawalUnlocked: false,
         calendarInterval: null,
         liveUpdateTimer: null,
-        teamMembers: [], // Cache for smart calculation
+        teamMembers: [], 
 
         init() {
             this.renderPackages();
@@ -1200,6 +1200,7 @@
                 await window.fset(userRef, {
                     fullName: name,
                     phone: fullPhone,
+                    role: "user", // Security role
                     inviteCodeUsed: inviteCode || "none",
                     myCode: generatedCode,
                     password: password, 
@@ -1208,10 +1209,11 @@
                     totalProfit: 0, 
                     activePackage: "none",
                     dailyProfit: 0,
-                    packageActivatedAt: 0, // NEW: For smart calculation
-                    lastSyncedTeamBonus: 0, // NEW: For sync logic
+                    packageActivatedAt: 0, 
+                    syncedPackageProfit: 0, // NEW: Smart Delta sync
+                    lastSyncedTeamBonus: 0,
                     checkInCount: 0,
-                    consecutiveDays: 0, // NEW: Streak tracking
+                    consecutiveDays: 0, 
                     lastCheckIn: 0,
                     createdAt: Date.now()
                 });
@@ -1226,6 +1228,7 @@
                 localStorage.setItem('uid', dbKey);
                 localStorage.setItem('userPhone', fullPhone);
                 localStorage.setItem('myCode', generatedCode);
+                localStorage.setItem('userPass', password); // Used for secure session check
                 
                 this.loadLocalData();
                 this.startDatabaseListener();
@@ -1241,7 +1244,7 @@
         },
 
         async processReferralSignup(inviteCode) {
-            // Keep original logic for direct assignment (optional improvement later)
+            // Can add direct signup bonus here if needed
         },
 
         async login() {
@@ -1269,6 +1272,7 @@
                         localStorage.setItem('uid', dbKey);
                         localStorage.setItem('userPhone', data.phone);
                         localStorage.setItem('myCode', data.myCode);
+                        localStorage.setItem('userPass', password); // Used for secure session check
                         
                         this.showToast("Login successful!", "success");
                         this.loadLocalData();
@@ -1288,6 +1292,12 @@
                 btn.disabled = false;
                 btn.innerHTML = '<span>Login Securely</span> <i class="fas fa-arrow-right"></i>';
             }
+        },
+
+        forceLogout(msg) {
+            localStorage.clear();
+            this.showToast(msg, "error");
+            setTimeout(() => location.reload(), 1500);
         },
 
         async secureLogout() {
@@ -1312,46 +1322,51 @@
 
         startDatabaseListener() {
             const uid = localStorage.getItem('uid');
+            const userPass = localStorage.getItem('userPass');
             if(!uid) return;
 
             const userRef = window.fref(window.fdb, 'users/' + uid);
             window.fonValue(userRef, (snapshot) => {
                 const data = snapshot.val();
-                if(data) {
-                    this.currentUserData = data;
+                
+                // Security Check: If user deleted or password changed on another device, log out.
+                if(!data || data.password !== userPass) {
+                    this.forceLogout("Session expired or password changed. Please log in again.");
+                    return;
+                }
 
-                    const pkgInfo = energyPackages.find(p => p.name === data.activePackage);
-                    const invest = pkgInfo ? pkgInfo.price : 0;
-                    document.getElementById('dash-invest').innerText = invest;
-                    
-                    const pkgBadge = document.getElementById('display-package-badge');
-                    if(data.activePackage && data.activePackage !== "none") {
-                        pkgBadge.className = 'badge badge-active';
-                        pkgBadge.innerHTML = `<i class="fas fa-bolt"></i> ${data.activePackage}`;
+                this.currentUserData = data;
+
+                const pkgInfo = energyPackages.find(p => p.name === data.activePackage);
+                const invest = pkgInfo ? pkgInfo.price : 0;
+                document.getElementById('dash-invest').innerText = invest;
+                
+                const pkgBadge = document.getElementById('display-package-badge');
+                if(data.activePackage && data.activePackage !== "none") {
+                    pkgBadge.className = 'badge badge-active';
+                    pkgBadge.innerHTML = `<i class="fas fa-bolt"></i> ${data.activePackage}`;
+                } else {
+                    pkgBadge.className = 'badge badge-inactive';
+                    pkgBadge.innerText = 'No Active Package';
+                }
+                
+                this.verifyWithdrawalEligibility(data.myCode);
+                this.loadTeamData(data.myCode);
+                
+                const checkIns = data.checkInCount || 0;
+                const feeText = document.getElementById('withdrawal-fee-text');
+                if(feeText) {
+                    if(checkIns >= 40) {
+                        feeText.innerHTML = '<i class="fas fa-percent"></i> Withdrawal Fee: <b>5%</b> (Discount Unlocked!)';
+                        feeText.style.color = 'var(--success-green)';
+                        feeText.style.borderColor = 'rgba(0,255,136,0.2)';
                     } else {
-                        pkgBadge.className = 'badge badge-inactive';
-                        pkgBadge.innerText = 'No Active Package';
-                    }
-                    
-                    this.verifyWithdrawalEligibility(data.myCode);
-                    this.loadTeamData(data.myCode);
-                    
-                    const checkIns = data.checkInCount || 0;
-                    const feeText = document.getElementById('withdrawal-fee-text');
-                    if(feeText) {
-                        if(checkIns >= 40) {
-                            feeText.innerHTML = '<i class="fas fa-percent"></i> Withdrawal Fee: <b>5%</b> (Discount Unlocked!)';
-                            feeText.style.color = 'var(--success-green)';
-                            feeText.style.borderColor = 'rgba(0,255,136,0.2)';
-                        } else {
-                            feeText.innerHTML = '<i class="fas fa-info-circle"></i> Standard Withdrawal Fee: <b>10%</b>';
-                            feeText.style.color = 'var(--error-red)';
-                        }
+                        feeText.innerHTML = '<i class="fas fa-info-circle"></i> Standard Withdrawal Fee: <b>10%</b>';
+                        feeText.style.color = 'var(--error-red)';
                     }
                 }
             });
 
-            // START SMART BANKING LIVE CALCULATIONS
             if (this.liveUpdateTimer) clearInterval(this.liveUpdateTimer);
             this.liveUpdateTimer = setInterval(() => {
                 this.updateLiveDashboards();
@@ -1376,7 +1391,6 @@
                         }
                         
                         document.getElementById('affiliate-team-size').innerText = teamSize;
-                        // The UI rendering is handed over to the live update timer for dynamic 5% computation
                     }
                 });
             } catch(e) {
@@ -1384,15 +1398,15 @@
             }
         },
 
-        // --- NEW: SMART BANKING LOGIC ---
+        // --- SMART BANKING DELTA TIMESTAMP ---
         updateLiveDashboards() {
             if (!this.currentUserData) return;
             const data = this.currentUserData;
             const now = Date.now();
             const msInDay = 24 * 60 * 60 * 1000;
             
-            // 1. Calculate My Own Profits
-            let liveProfit = 0;
+            // 1. Calculate Personal Live Profit
+            let totalGenerated = 0;
             let todayProfit = 0;
             let yesterdayProfit = 0;
             const dailyRate = parseFloat(data.dailyProfit || 0);
@@ -1400,9 +1414,9 @@
             if (data.activePackage && data.activePackage !== "none" && dailyRate > 0) {
                 const activatedAt = data.packageActivatedAt || data.createdAt || now; 
                 
-                // Total live profit generated since activation/last sync
-                const daysActive = (now - activatedAt) / msInDay;
-                liveProfit = Math.max(0, daysActive * dailyRate);
+                // Absolute total generated by current package since activation
+                const daysActive = Math.max(0, (now - activatedAt) / msInDay);
+                totalGenerated = daysActive * dailyRate;
                 
                 // Calculate Today's exactly
                 const startOfDay = new Date().setHours(0,0,0,0);
@@ -1412,14 +1426,17 @@
                 // Calculate Yesterday's exactly
                 const startOfYesterday = startOfDay - msInDay;
                 if (activatedAt <= startOfYesterday) {
-                    yesterdayProfit = dailyRate; // Active entire day yesterday
+                    yesterdayProfit = dailyRate;
                 } else if (activatedAt < startOfDay) {
-                    yesterdayProfit = ((startOfDay - activatedAt) / msInDay) * dailyRate; // Active part of yesterday
+                    yesterdayProfit = ((startOfDay - activatedAt) / msInDay) * dailyRate;
                 }
             }
             
-            // 2. Calculate Team Dynamic 5% Bonus
-            let totalLiveTeamEarnings = 0;
+            // Subtract whatever has already been synced to balance to get what is "live" and unsynced
+            const liveProfit = Math.max(0, totalGenerated - parseFloat(data.syncedPackageProfit || 0));
+            
+            // 2. Calculate Team Dynamic 5% Bonus securely
+            let totalTeamEarnings = 0;
             let teamHtml = '';
 
             if (this.teamMembers.length === 0) {
@@ -1428,20 +1445,20 @@
 
             this.teamMembers.forEach(member => {
                 const mDailyRate = parseFloat(member.dailyProfit || 0);
-                let mLiveProfit = 0;
+                let mTotalGen = 0;
                 
                 if (member.activePackage && member.activePackage !== "none" && mDailyRate > 0) {
                     const mActivatedAt = member.packageActivatedAt || member.createdAt || now;
-                    const mDaysActive = Math.max(0, (now - mActivatedAt) / msInDay);
-                    mLiveProfit = mDaysActive * mDailyRate;
+                    mTotalGen = Math.max(0, (now - mActivatedAt) / msInDay) * mDailyRate;
                 }
                 
-                const mStaticProfit = parseFloat(member.totalProfit || 0);
-                const mTotalProfit = mStaticProfit + mLiveProfit;
+                // Member's all-time generated profit = static (from previous packages) + live (from current package)
+                const mUnsynced = Math.max(0, mTotalGen - parseFloat(member.syncedPackageProfit || 0));
+                const mAllTime = parseFloat(member.totalProfit || 0) + mUnsynced;
                 
-                // EXACTLY 5% of this team member's total profit
-                const myBonus = mTotalProfit * 0.05;
-                totalLiveTeamEarnings += myBonus;
+                // My 5% cut of this member's lifetime earnings
+                const myBonus = mAllTime * 0.05;
+                totalTeamEarnings += myBonus;
 
                 const equip = (member.activePackage && member.activePackage !== "none") ? member.activePackage : "No Active Equipment";
                 const equipColor = equip === "No Active Equipment" ? "var(--text-gray)" : "var(--success-green)";
@@ -1460,67 +1477,71 @@
                 `;
             });
 
-            const list = document.getElementById('team-list');
-            if (list) list.innerHTML = teamHtml;
+            const listView = document.getElementById('affiliate-view');
+            if (listView && listView.classList.contains('active')) {
+                const list = document.getElementById('team-list');
+                if (list) list.innerHTML = teamHtml;
+            }
 
-            // 3. Update Global Dashboard
+            // 3. Update Global Dashboard displays
             const staticProfit = parseFloat(data.totalProfit || 0);
-            const totalCalculatedProfit = staticProfit + liveProfit;
+            const displayTotalProfit = staticProfit + liveProfit;
             
-            // Unsynced team bonus (difference between total current bonus and what we already saved)
-            const unsyncedTeamBonus = totalLiveTeamEarnings - parseFloat(data.lastSyncedTeamBonus || 0);
+            const unsyncedTeamBonus = Math.max(0, totalTeamEarnings - parseFloat(data.lastSyncedTeamBonus || 0));
             const baseBalance = parseFloat(data.balance || 0);
-            
-            // Live Wallet Balance = Saved Balance + New Personal Profit + New Unsaved Team Bonus
             const liveWalletBalance = baseBalance + liveProfit + unsyncedTeamBonus;
 
-            // Render to DOM with 4 decimals to show the "banking" rolling effect
-            document.getElementById('dash-total').innerText = totalCalculatedProfit.toFixed(4);
+            document.getElementById('dash-total').innerText = displayTotalProfit.toFixed(4);
             document.getElementById('dash-today').innerText = todayProfit.toFixed(4);
             document.getElementById('dash-yest').innerText = yesterdayProfit.toFixed(2);
-            document.getElementById('affiliate-earned').innerText = "€ " + totalLiveTeamEarnings.toFixed(4);
+            document.getElementById('affiliate-earned').innerText = "€ " + totalTeamEarnings.toFixed(4);
             document.getElementById('wallet-balance').innerText = liveWalletBalance.toFixed(4);
         },
 
-        // Synch profits into static DB (Called before withdrawals or rewards)
+        // Synchronize Delta profits securely into DB (Without destroying "Today" counters)
         async syncBalanceToDB() {
-            if (!this.currentUserData) return 0;
+            if (!this.currentUserData) return { newBalance: 0, newTotalProfit: 0 };
             const uid = localStorage.getItem('uid');
             const data = this.currentUserData;
             const now = Date.now();
             const msInDay = 24 * 60 * 60 * 1000;
             
             let liveProfit = 0;
+            let totalGenerated = 0;
             const dailyRate = parseFloat(data.dailyProfit || 0);
+            
             if (data.activePackage && data.activePackage !== "none" && dailyRate > 0) {
                 const activatedAt = data.packageActivatedAt || data.createdAt || now;
-                const daysActive = (now - activatedAt) / msInDay;
-                liveProfit = Math.max(0, daysActive * dailyRate);
+                const daysActive = Math.max(0, (now - activatedAt) / msInDay);
+                totalGenerated = daysActive * dailyRate;
+                liveProfit = Math.max(0, totalGenerated - parseFloat(data.syncedPackageProfit || 0));
             }
             
             let totalTeamEarnings = 0;
             this.teamMembers.forEach(member => {
                 const mDailyRate = parseFloat(member.dailyProfit || 0);
-                let mLiveProfit = 0;
+                let mTotalGen = 0;
                 if (member.activePackage && member.activePackage !== "none" && mDailyRate > 0) {
                     const mActivatedAt = member.packageActivatedAt || member.createdAt || now;
-                    mLiveProfit = Math.max(0, (now - mActivatedAt) / msInDay) * mDailyRate;
+                    mTotalGen = Math.max(0, (now - mActivatedAt) / msInDay) * mDailyRate;
                 }
-                totalTeamEarnings += (parseFloat(member.totalProfit || 0) + mLiveProfit) * 0.05;
+                const mUnsynced = Math.max(0, mTotalGen - parseFloat(member.syncedPackageProfit || 0));
+                const mAllTime = parseFloat(member.totalProfit || 0) + mUnsynced;
+                totalTeamEarnings += mAllTime * 0.05;
             });
 
-            const unsyncedTeamBonus = totalTeamEarnings - parseFloat(data.lastSyncedTeamBonus || 0);
+            const unsyncedTeamBonus = Math.max(0, totalTeamEarnings - parseFloat(data.lastSyncedTeamBonus || 0));
             const newTotalProfit = parseFloat(data.totalProfit || 0) + liveProfit;
             const newBalance = parseFloat(data.balance || 0) + liveProfit + unsyncedTeamBonus;
             
             await window.fupdate(window.fref(window.fdb, 'users/' + uid), {
                 balance: newBalance,
                 totalProfit: newTotalProfit,
-                packageActivatedAt: now, // Reset timer 
-                lastSyncedTeamBonus: totalTeamEarnings // Mark bonus as saved
+                syncedPackageProfit: totalGenerated, // We mark how much we saved, without changing activation date
+                lastSyncedTeamBonus: totalTeamEarnings
             });
             
-            return newBalance;
+            return { newBalance, newTotalProfit };
         },
 
         listenToWithdrawals() {
@@ -1628,6 +1649,7 @@
             try {
                 await window.fupdate(window.fref(window.fdb, 'users/' + uid), { password: newPass });
                 this.currentUserData.password = newPass;
+                localStorage.setItem('userPass', newPass); // Update session validation pass
                 this.showToast("Password updated successfully!", "success");
                 document.getElementById('prof-old-pass').value = '';
                 document.getElementById('prof-new-pass').value = '';
@@ -1647,7 +1669,8 @@
             }
 
             // Sync dynamic money to database before validating balance
-            const trueBalance = await this.syncBalanceToDB();
+            const synced = await this.syncBalanceToDB();
+            const trueBalance = synced.newBalance;
             
             const withdrawAmount = parseFloat(document.getElementById('withdraw-amount').value);
             const withdrawAddress = document.getElementById('withdraw-address').value.trim();
@@ -1692,7 +1715,7 @@
                 });
                 
                 await window.fupdate(window.fref(window.fdb, 'users/' + uid), {
-                    balance: trueBalance - withdrawAmount // Withdraw from the newly synced balance
+                    balance: trueBalance - withdrawAmount
                 });
                 
                 this.showToast("Withdrawal request sent successfully!", "success");
@@ -1713,15 +1736,15 @@
             this.adminClickTimer = setTimeout(() => { 
                 this.adminClickCount = 0; 
             }, 1500);
+
             if(this.adminClickCount >= 5) {
                 this.adminClickCount = 0;
-                const pass = prompt("System Administrator Authentication Required:\nEnter Password:");
-                
-                if(pass === "SofiaDubaiLondonOneMilion2026") {
+                // Secure Admin Verification check against Firebase Data, no hardcoded password
+                if(this.currentUserData && this.currentUserData.role === 'admin') {
                     this.showToast("Admin Access Granted", "success");
                     this.switchAuthView('admin');
-                } else if(pass !== null) {
-                    this.showToast("Access Denied.", "error");
+                } else {
+                    this.showToast("Access Denied. Administrator privileges required.", "error");
                 }
             }
         },
@@ -1753,7 +1776,8 @@
                 await window.fupdate(userRef, {
                     activePackage: pkg,
                     dailyProfit: finalDailyProfit,
-                    packageActivatedAt: Date.now() // SUPER IMPORTANT: Starts the smart clock from now
+                    packageActivatedAt: Date.now(), // Sets the clock to NOW
+                    syncedPackageProfit: 0 // Resets sync so new packet calculates fresh
                 });
                 this.showToast(`User updated successfully! Package: ${pkg}, Daily Yield: €${finalDailyProfit}`, "success");
                 
@@ -1810,7 +1834,6 @@
         renderCalendar() {
             const grid = document.getElementById('calendar-grid');
             grid.innerHTML = '';
-            // Change calendar rendering to reflect Streak length, rather than absolute check-ins (optional UI choice, keeping absolute total count visually)
             const count = this.currentUserData?.checkInCount || 0;
             
             for(let i=1; i<=365; i++) {
@@ -1822,14 +1845,12 @@
             this.updateCheckInUI();
         },
 
-        // UMN LOGIC CALENDAR UI: Next day check-in
         updateCheckInUI() {
             const btn = document.getElementById('btn-checkin');
             if(!this.currentUserData) return;
             const lastCheckIn = this.currentUserData.lastCheckIn || 0;
             const now = Date.now();
             
-            // Normalize to local midnight
             const todayMidnight = new Date().setHours(0,0,0,0);
             const lastCheckInMidnight = new Date(lastCheckIn).setHours(0,0,0,0);
             
@@ -1848,7 +1869,6 @@
             }
         },
 
-        // UMN LOGIC: 7-DAY STREAK
         async checkIn() {
             if(!this.currentUserData) return;
             const lastCheckIn = this.currentUserData.lastCheckIn || 0;
@@ -1864,7 +1884,6 @@
 
             let streak = this.currentUserData.consecutiveDays || 0;
             
-            // If they checked in exactly yesterday, increase streak. Otherwise, reset to 1.
             if (todayMidnight - lastCheckInMidnight === msInDay) {
                 streak++; 
             } else {
@@ -1876,14 +1895,14 @@
             const updates = { checkInCount: totalCheckIns, lastCheckIn: now, consecutiveDays: streak };
             
             // Sync live profit to DB BEFORE adding bonuses to prevent overwriting
-            const currentBalance = await this.syncBalanceToDB(); 
+            const synced = await this.syncBalanceToDB(); 
             
             let message = `Check-in successful! Current Streak: ${streak} days.`;
 
             if (streak === 7) {
-                updates.balance = currentBalance + 5;
-                updates.totalProfit = parseFloat(this.currentUserData.totalProfit || 0) + 5;
-                updates.consecutiveDays = 0; // Reset streak after receiving 5 euros
+                updates.balance = synced.newBalance + 5;
+                updates.totalProfit = synced.newTotalProfit + 5;
+                updates.consecutiveDays = 0; 
                 message = "Reward Unlocked: €5 added to your balance for 7-day streak!";
             } else if (totalCheckIns === 40) {
                 message = "Reward Unlocked: Withdrawal fee reduced to 5%!";
@@ -1891,6 +1910,7 @@
                 updates.activePackage = "VIP 1";
                 updates.dailyProfit = 59; 
                 updates.packageActivatedAt = now;
+                updates.syncedPackageProfit = 0; // Reset for the new packet
                 message = "Reward Unlocked: Free VIP 1 Activated!";
             } else if (totalCheckIns === 365) {
                 message = "JACKPOT! Please contact support to claim your iPhone 17 Pro Max!";
