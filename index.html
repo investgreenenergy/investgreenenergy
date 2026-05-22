@@ -115,7 +115,7 @@
             text-transform: uppercase;
             letter-spacing: -1px;
             user-select: none;
-            cursor: pointer;
+            cursor: default; /* ПРОМЯНА: Курсорът вече не подсказва, че може да се клика */
             background: linear-gradient(to right, #00FF88, #00cc6a);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -514,7 +514,7 @@
 
     <div id="login-view" class="view active">
         <div class="text-center">
-            <h1 class="logo-title" onclick="appLogic.adminTriggerClick()">Invest In Energy</h1>
+            <h1 class="logo-title" style="cursor: default;">Invest In Energy</h1>
             <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" class="hero-image">
                 <rect width="240" height="120" rx="10" fill="#040d06"/>
                 <rect x="180" y="25" width="35" height="75" rx="5" fill="#00FF88"/>
@@ -599,7 +599,7 @@
 
     <div id="register-view" class="view">
         <div class="text-center">
-            <h1 class="logo-title">Invest In Energy</h1>
+            <h1 class="logo-title" style="cursor: default;">Invest In Energy</h1>
             <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg" class="hero-image">
                 <rect width="240" height="120" rx="10" fill="#040d06"/>
                 <path d="M120 20 L220 100 L20 100 Z" fill="#00FF88" opacity="0.15"/>
@@ -655,7 +655,7 @@
                 </div>
                 <div class="input-wrapper phone-number">
                     <input type="tel" id="reg-phone" placeholder="871234567">
-                </div>
+                 </div>
             </div>
         </div>
 
@@ -760,7 +760,7 @@
             <div class="form-group">
                 <label style="color: var(--text-gray);">Assign Package</label>
                 <div class="input-wrapper admin-input">
-                    <i class="fas fa-box"></i>
+                     <i class="fas fa-box"></i>
                     <select id="admin-package-select">
                         <option value="none">No Package (Reset)</option>
                         <option value="Basic 1">Basic 1</option>
@@ -771,14 +771,14 @@
                         <option value="VIP 3">VIP 3</option>
                         <option value="Ultimate Energy">Ultimate Energy</option>
                         <option value="Custom Plan">Custom Plan</option>
-                    </select>
+                     </select>
                 </div>
             </div>
 
             <div class="form-group">
                 <label style="color: var(--text-gray);">Daily Profit Amount (€)</label>
                 <div class="input-wrapper admin-input">
-                    <i class="fas fa-euro-sign"></i>
+                     <i class="fas fa-euro-sign"></i>
                     <input type="number" id="admin-custom-daily" placeholder="e.g. 59 (Overrides defaults)">
                 </div>
             </div>
@@ -792,6 +792,16 @@
     <div id="profile-view" class="view">
         <button class="back-btn" onclick="appLogic.navTo('dashboard')"><i class="fas fa-arrow-left"></i> Dashboard</button>
         <h2 class="text-center" style="margin-bottom: 25px; text-transform: uppercase;">My Profile</h2>
+
+        <div class="card card-admin" id="profile-admin-card" style="display: none; text-align: center; margin-bottom: 25px;">
+            <h4 style="font-size: 16px; margin-bottom: 10px; color: var(--admin-color); text-transform: uppercase; font-weight: 900;">
+                <i class="fas fa-user-shield"></i> System Console
+            </h4>
+            <p style="font-size: 12px; color: var(--text-gray); margin-bottom: 15px; font-weight: bold;">Administrator privileges active.</p>
+            <button class="btn btn-admin" onclick="appLogic.openAdminFromProfile()">
+                Open Admin Panel <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
         
         <div class="text-center" style="margin-bottom: 25px;">
             <div class="profile-avatar">
@@ -859,7 +869,7 @@
                         <strong>Withdrawal Locked!</strong><br>
                         You need at least 1 invited person with an active package to unlock withdrawals.
                     </span>
-                </div>
+                 </div>
             </div>
 
             <div class="form-group" style="text-align: left; margin-top: 30px; margin-bottom: 15px;">
@@ -1059,7 +1069,6 @@
         { id: 'vip3', name: 'VIP 3', price: 6500, daily: 430, monthly: 12900, remaining: 3018 },
         { id: 'ultimate', name: 'Ultimate Energy', price: 20000, daily: 1500, monthly: 45000, remaining: 201 }
     ];
-
     const appLogic = {
         adminClickCount: 0,
         adminClickTimer: null,
@@ -1175,7 +1184,6 @@
             const phone = document.getElementById('reg-phone').value.replace(/\s+/g, '');
             const inviteCode = document.getElementById('reg-invite').value.trim();
             const password = document.getElementById('reg-password').value;
-            
             if(!name || !phone || !password) return this.showToast("Please fill all required fields!", "error");
             if(!this.validatePassword(password)) return;
             
@@ -1217,7 +1225,6 @@
                     lastCheckIn: 0,
                     createdAt: Date.now()
                 });
-                
                 this.showToast("Welcome to green energy! Registration successful.", "success");
                 
                 if(inviteCode && inviteCode !== "none") {
@@ -1252,14 +1259,12 @@
             const countryCode = document.getElementById('login-country-code').value;
             const phone = document.getElementById('login-phone').value.replace(/\s+/g, '');
             const password = document.getElementById('login-password').value;
-            
             if(!phone || !password) return this.showToast("Enter phone and password!", "error");
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
             const fullPhone = countryCode + phone;
             const dbKey = fullPhone.replace('+', '');
-            
             try {
                 const userRef = window.fref(window.fdb, 'users/' + dbKey);
                 const snapshot = await window.fget(userRef);
@@ -1272,7 +1277,8 @@
                         localStorage.setItem('uid', dbKey);
                         localStorage.setItem('userPhone', data.phone);
                         localStorage.setItem('myCode', data.myCode);
-                        localStorage.setItem('userPass', password); // Used for secure session check
+                        localStorage.setItem('userPass', password);
+                        // Used for secure session check
                         
                         this.showToast("Login successful!", "success");
                         this.loadLocalData();
@@ -1337,6 +1343,16 @@
 
                 this.currentUserData = data;
 
+                // --- НОВАТА ЛОГИКА ЗА ПОКАЗВАНЕ НА АДМИН ПАНЕЛА В ПРОФИЛА ---
+                const adminCard = document.getElementById('profile-admin-card');
+                if (adminCard) {
+                    if (data.role === 'admin') {
+                        adminCard.style.display = 'block'; // Показваме бутона
+                    } else {
+                        adminCard.style.display = 'none';  // Скриваме бутона за всички останали
+                    }
+                }
+
                 const pkgInfo = energyPackages.find(p => p.name === data.activePackage);
                 const invest = pkgInfo ? pkgInfo.price : 0;
                 document.getElementById('dash-invest').innerText = invest;
@@ -1366,7 +1382,6 @@
                     }
                 }
             });
-
             if (this.liveUpdateTimer) clearInterval(this.liveUpdateTimer);
             this.liveUpdateTimer = setInterval(() => {
                 this.updateLiveDashboards();
@@ -1404,13 +1419,11 @@
             const data = this.currentUserData;
             const now = Date.now();
             const msInDay = 24 * 60 * 60 * 1000;
-            
             // 1. Calculate Personal Live Profit
             let totalGenerated = 0;
             let todayProfit = 0;
             let yesterdayProfit = 0;
             const dailyRate = parseFloat(data.dailyProfit || 0);
-
             if (data.activePackage && data.activePackage !== "none" && dailyRate > 0) {
                 const activatedAt = data.packageActivatedAt || data.createdAt || now; 
                 
@@ -1422,7 +1435,6 @@
                 const startOfDay = new Date().setHours(0,0,0,0);
                 const msToday = now - Math.max(startOfDay, activatedAt);
                 todayProfit = Math.max(0, (msToday / msInDay) * dailyRate);
-                
                 // Calculate Yesterday's exactly
                 const startOfYesterday = startOfDay - msInDay;
                 if (activatedAt <= startOfYesterday) {
@@ -1434,7 +1446,6 @@
             
             // Subtract whatever has already been synced to balance to get what is "live" and unsynced
             const liveProfit = Math.max(0, totalGenerated - parseFloat(data.syncedPackageProfit || 0));
-            
             // 2. Calculate Team Dynamic 5% Bonus securely
             let totalTeamEarnings = 0;
             let teamHtml = '';
@@ -1462,7 +1473,6 @@
 
                 const equip = (member.activePackage && member.activePackage !== "none") ? member.activePackage : "No Active Equipment";
                 const equipColor = equip === "No Active Equipment" ? "var(--text-gray)" : "var(--success-green)";
-                
                 teamHtml += `
                     <div class="history-item" style="flex-direction: column; align-items: flex-start; gap: 8px;">
                         <div style="display:flex; justify-content: space-between; width: 100%;">
@@ -1470,13 +1480,12 @@
                             <span style="font-size: 12px; color: var(--text-gray);">${this.maskPhone(member.phone)}</span>
                         </div>
                         <div style="display:flex; justify-content: space-between; width: 100%;">
-                            <span style="font-size: 11px; color: ${equipColor}; font-weight: bold;"><i class="fas fa-bolt"></i> ${equip}</span>
+                             <span style="font-size: 11px; color: ${equipColor}; font-weight: bold;"><i class="fas fa-bolt"></i> ${equip}</span>
                             <span style="font-size: 13px; font-weight: 900; color: var(--main-green);">+ €${myBonus.toFixed(4)}</span>
                         </div>
-                    </div>
+                     </div>
                 `;
             });
-
             const listView = document.getElementById('affiliate-view');
             if (listView && listView.classList.contains('active')) {
                 const list = document.getElementById('team-list');
@@ -1523,24 +1532,21 @@
                 let mTotalGen = 0;
                 if (member.activePackage && member.activePackage !== "none" && mDailyRate > 0) {
                     const mActivatedAt = member.packageActivatedAt || member.createdAt || now;
-                    mTotalGen = Math.max(0, (now - mActivatedAt) / msInDay) * mDailyRate;
+                     mTotalGen = Math.max(0, (now - mActivatedAt) / msInDay) * mDailyRate;
                 }
                 const mUnsynced = Math.max(0, mTotalGen - parseFloat(member.syncedPackageProfit || 0));
                 const mAllTime = parseFloat(member.totalProfit || 0) + mUnsynced;
-                totalTeamEarnings += mAllTime * 0.05;
+                 totalTeamEarnings += mAllTime * 0.05;
             });
-
             const unsyncedTeamBonus = Math.max(0, totalTeamEarnings - parseFloat(data.lastSyncedTeamBonus || 0));
             const newTotalProfit = parseFloat(data.totalProfit || 0) + liveProfit;
             const newBalance = parseFloat(data.balance || 0) + liveProfit + unsyncedTeamBonus;
-            
             await window.fupdate(window.fref(window.fdb, 'users/' + uid), {
                 balance: newBalance,
                 totalProfit: newTotalProfit,
                 syncedPackageProfit: totalGenerated, // We mark how much we saved, without changing activation date
                 lastSyncedTeamBonus: totalTeamEarnings
             });
-            
             return { newBalance, newTotalProfit };
         },
 
@@ -1565,7 +1571,7 @@
                         const amount = parseFloat(w.amount);
                         const fee = amount * feePercent;
                         const net = amount - fee;
-                        const date = new Date(w.timestamp).toLocaleDateString();
+                         const date = new Date(w.timestamp).toLocaleDateString();
 
                         list.innerHTML += `
                             <div class="history-item">
@@ -1573,7 +1579,7 @@
                                     <div class="history-icon" style="background: linear-gradient(145deg, #102918, #06140a); color:var(--main-green); border: 1px solid rgba(0,255,136,0.2);">
                                         <i class="fas fa-file-invoice-dollar"></i>
                                     </div>
-                                    <div>
+                                     <div>
                                         <div style="font-size: 14px; font-weight: 900; color: white;">Withdrawal</div>
                                         <div style="font-size: 11px; color: var(--text-gray); font-weight: bold;">${date} • ${w.status.toUpperCase()}</div>
                                     </div>
@@ -1584,7 +1590,7 @@
                                 </div>
                             </div>
                         `;
-                    });
+                     });
                 }
                 
                 if(count === 0) {
@@ -1597,7 +1603,7 @@
             if(!myCode) return;
             try {
                 const usersRef = window.fref(window.fdb, 'users');
-                const snap = await window.fget(usersRef);
+                 const snap = await window.fget(usersRef);
                 let hasQualifiedReferral = false;
 
                 if(snap.exists()) {
@@ -1606,7 +1612,7 @@
                         if(allUsers[key].inviteCodeUsed === myCode) {
                             if(allUsers[key].activePackage && allUsers[key].activePackage !== "none") {
                                 hasQualifiedReferral = true;
-                                break;
+                                 break;
                             }
                         }
                     }
@@ -1676,7 +1682,6 @@
             const withdrawAddress = document.getElementById('withdraw-address').value.trim();
             const uid = localStorage.getItem('uid'); 
             const phone = localStorage.getItem('userPhone');
-            
             if(!withdrawAmount || withdrawAmount < 50) {
                 return this.showToast("Minimum withdrawal amount is 50 €.", "error");
             }
@@ -1713,11 +1718,9 @@
                     status: "pending",
                     timestamp: new Date().toISOString()
                 });
-                
                 await window.fupdate(window.fref(window.fdb, 'users/' + uid), {
                     balance: trueBalance - withdrawAmount
                 });
-                
                 this.showToast("Withdrawal request sent successfully!", "success");
                 document.getElementById('withdraw-amount').value = '';
                 document.getElementById('withdraw-address').value = '';
@@ -1729,23 +1732,13 @@
             }
         },
 
-        adminTriggerClick() {
-            this.adminClickCount++;
-            clearTimeout(this.adminClickTimer);
-            
-            this.adminClickTimer = setTimeout(() => { 
-                this.adminClickCount = 0; 
-            }, 1500);
-
-            if(this.adminClickCount >= 5) {
-                this.adminClickCount = 0;
-                // Secure Admin Verification check against Firebase Data, no hardcoded password
-                if(this.currentUserData && this.currentUserData.role === 'admin') {
-                    this.showToast("Admin Access Granted", "success");
-                    this.switchAuthView('admin');
-                } else {
-                    this.showToast("Access Denied. Administrator privileges required.", "error");
-                }
+        // --- НОВАТА ФУНКЦИЯ ЗА ОТВАРЯНЕ НА АДМИН ПАНЕЛА ОТ ПРОФИЛА ---
+        openAdminFromProfile() {
+            if(this.currentUserData && this.currentUserData.role === 'admin') {
+                this.showToast("Admin Access Granted", "success");
+                this.navTo('admin'); // Отваря изгледа admin-view
+            } else {
+                this.showToast("Access Denied. Administrator privileges required.", "error");
             }
         },
 
@@ -1858,7 +1851,6 @@
                 btn.disabled = true;
                 const tomorrowMidnight = todayMidnight + (24 * 60 * 60 * 1000);
                 const timeLeft = tomorrowMidnight - now;
-                
                 const hours = Math.floor(timeLeft / (1000 * 60 * 60));
                 const mins = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 const secs = Math.floor((timeLeft % (1000 * 60)) / 1000);
@@ -1874,18 +1866,15 @@
             const lastCheckIn = this.currentUserData.lastCheckIn || 0;
             const now = Date.now();
             const msInDay = 24 * 60 * 60 * 1000;
-            
             const todayMidnight = new Date().setHours(0,0,0,0);
             const lastCheckInMidnight = new Date(lastCheckIn).setHours(0,0,0,0);
-            
             if (todayMidnight === lastCheckInMidnight && lastCheckIn !== 0) {
                 return this.showToast("You can only check in once per calendar day.", "error");
             }
 
             let streak = this.currentUserData.consecutiveDays || 0;
-            
             if (todayMidnight - lastCheckInMidnight === msInDay) {
-                streak++; 
+                streak++;
             } else {
                 streak = 1;
             }
@@ -1893,10 +1882,8 @@
             const totalCheckIns = (this.currentUserData.checkInCount || 0) + 1;
             const uid = localStorage.getItem('uid');
             const updates = { checkInCount: totalCheckIns, lastCheckIn: now, consecutiveDays: streak };
-            
             // Sync live profit to DB BEFORE adding bonuses to prevent overwriting
-            const synced = await this.syncBalanceToDB(); 
-            
+            const synced = await this.syncBalanceToDB();
             let message = `Check-in successful! Current Streak: ${streak} days.`;
 
             if (streak === 7) {
@@ -1924,7 +1911,6 @@
             }
         }
     };
-
     window.addEventListener('DOMContentLoaded', () => {
         appLogic.init();
     });
