@@ -13,7 +13,6 @@
         /* ==========================================================================
            1. CSS VARIABLES & THEME SETTINGS (3D Matrix / Neon Energy)
            ========================================================================== */
-   
         :root {
             --dark-bg: #030a05;
             --dark-green: #06140a; 
@@ -423,7 +422,7 @@
         .level-subtitle { font-size: 11px; color: #fff; font-weight: 600; position: relative; z-index: 1; background: rgba(0,0,0,0.5); display: inline-block; padding: 4px 10px; border-radius: 20px; margin-top: 5px;}
 
         /* ==========================================================================
-           9. STORE PACKAGES
+           9. STORE PACKAGES & PROMO
            ========================================================================== */
         .package-card {
             background: linear-gradient(145deg, var(--dark-green-light), var(--dark-green));
@@ -449,7 +448,8 @@
         .package-price span { font-size: 16px; color: var(--main-green); font-weight: 700; text-shadow: none; }
         
         .package-details { 
-            display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 13px; 
+            display: flex;
+            justify-content: space-between; margin-bottom: 20px; font-size: 13px; 
             background: linear-gradient(145deg, #0a1c11, #06140a); padding: 15px; 
             border-radius: var(--border-radius-sm); box-shadow: inset 0 3px 6px rgba(0,0,0,0.8);
             border: 1px solid rgba(0,255,136,0.05);
@@ -457,14 +457,23 @@
         .package-details strong { color: var(--success-green); font-size: 18px; display: block; margin-top: 5px; font-weight: 900; text-shadow: 0 0 8px rgba(0,255,136,0.2); }
         .buy-btn { width: 100%; border-radius: 50px; }
 
+        /* --- FLASH PROMO STYLES --- */
+        #promoBanner {
+            display: none; background: linear-gradient(145deg, #8B0000, #4a0000); text-align: center; padding: 20px; border-radius: var(--border-radius-md); margin-bottom: 25px; border: 2px solid var(--error-red); box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(255, 51, 102, 0.4); animation: pulseGlow 2s infinite alternate;
+        }
+        @keyframes pulseGlow { from { box-shadow: 0 0 10px rgba(255, 51, 102, 0.4); } to { box-shadow: 0 0 25px rgba(255, 51, 102, 0.8); } }
+        #promoBanner h2 { color: #000; font-size: 26px; margin-bottom: 10px; text-transform: uppercase; text-shadow: 2px 2px 0px #ff4d4d, 4px 4px 0px #4a0000; }
+        #promoCountdown { color: white; font-size: 28px; font-weight: 900; letter-spacing: 2px; text-shadow: 2px 2px 5px rgba(0,0,0,0.8); }
+        .old-price { text-decoration: line-through; text-decoration-color: var(--error-red); text-decoration-thickness: 3px; color: var(--text-gray); font-size: 18px; margin-right: 10px; }
+        .new-price { color: var(--main-green); font-weight: 900; font-size: 38px; text-shadow: 0 0 15px var(--main-green-glow); }
+
         /* ==========================================================================
            10. MODALS & TOAST NOTIFICATIONS
            ========================================================================== */
         .modal-overlay {
-            display: none;
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(3, 10, 5, 0.95); z-index: 2000; justify-content: center; align-items: center;
-            backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.3s;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(3, 10, 5, 0.95); z-index: 2000; justify-content: center;
+            align-items: center; backdrop-filter: blur(10px); opacity: 0; transition: opacity 0.3s;
         }
         .modal-overlay.show { display: flex; opacity: 1; }
         .modal-content {
@@ -783,6 +792,17 @@
             <p style="color: var(--text-gray); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Administrator Access Only</p>
         </div>
 
+        <div class="card card-admin" style="border-left: 4px solid var(--error-red);">
+            <h3 style="font-size: 18px; margin-bottom: 20px; color: white; text-transform: uppercase;">Flash Sale (50% OFF)</h3>
+            <p style="font-size: 12px; color: var(--text-gray); margin-bottom: 15px;">Start a global 24-hour promotion on all packages.</p>
+            <button class="btn btn-admin" style="background: linear-gradient(145deg, #28a745, #1e7e34); margin-bottom: 10px; border-left: none;" onclick="appLogic.startPromo()">
+                <i class="fas fa-bolt"></i> Start 24h Promo
+            </button>
+            <button class="btn btn-admin" style="background: linear-gradient(145deg, #dc3545, #a71d2a);" onclick="appLogic.stopPromo()">
+                <i class="fas fa-stop-circle"></i> Stop Promo
+            </button>
+        </div>
+
         <div class="card card-admin">
             <h3 style="font-size: 18px; margin-bottom: 20px; color: white; text-transform: uppercase;">Manage User Account</h3>
             
@@ -858,7 +878,7 @@
         
         <div class="text-center" style="margin-bottom: 25px;">
             <div class="profile-avatar">
-                <i class="fas fa-user-astronaut"></i>
+                 <i class="fas fa-user-astronaut"></i>
             </div>
             <h3 id="display-phone" style="letter-spacing: 2px; color: white; margin-bottom: 5px; font-size: 20px;"></h3>
             <div style="margin-top: 15px;">
@@ -957,6 +977,12 @@
         <button class="back-btn" onclick="appLogic.navTo('dashboard')"><i class="fas fa-arrow-left"></i> Dashboard</button>
         <h2 class="text-center" style="text-transform: uppercase;">Energy Store</h2>
         <p class="text-center text-gray" style="margin-bottom: 25px; font-weight: 600;">Invest in charging stations and earn daily.</p>
+        
+        <div id="promoBanner">
+            <h2>⚡  After celebrating 3 days of launch, take advantage now -50% ⚡</h2>
+            <div id="promoCountdown">00ч 00м 00с</div>
+        </div>
+
         <div id="packages-container"></div>
     </div>
 
@@ -1067,7 +1093,7 @@
                         <tr class="row-dark"><td class="plan-name">⚡ VIP - 2</td><td>3000€</td><td>165€</td><td>4950€</td><td>+1950€</td><td>18 days</td></tr>
                         <tr class="row-light"><td class="plan-name">⚡ VIP - 3</td><td>6500€</td><td>430€</td><td>12900€</td><td>+6400€</td><td>15 days</td></tr>
                         <tr class="row-ultimate"><td class="plan-name">⚡ ULTIMATE ENERGY</td><td>20000€</td><td>1500€</td><td>45000€</td><td>+25000€</td><td>13 days</td></tr>
-                    </tbody>
+                     </tbody>
                 </table>
             </div>
         </div>
@@ -1113,7 +1139,7 @@
             <button class="btn" id="btn-checkin" onclick="appLogic.checkIn()">
                 <i class="fas fa-check-square"></i> Register Now
             </button>
-            
+             
             <div class="rewards-text" style="margin-top: 20px; color: var(--text-light); background: #040d06; padding: 18px; border-radius: 10px; box-shadow: inset 0 4px 8px rgba(0,0,0,0.8); border: 1px solid rgba(0,255,136,0.1);">
                 <p>🎁 Log in for a total of 7 days to get €5</p>
                 <p>🎁 Log in for 40 days to get -5% withdrawal fee</p>
@@ -1144,7 +1170,7 @@
                 </div>
             </div>
             
-            <button class="btn" id="btn-forgot" onclick="appLogic.submitForgotPassword()">
+             <button class="btn" id="btn-forgot" onclick="appLogic.submitForgotPassword()">
                 <i class="fas fa-paper-plane"></i> Send to Support
             </button>
         </div>
@@ -1187,6 +1213,7 @@
         { id: 'vip3', name: 'VIP 3', price: 6500, daily: 430, monthly: 12900, remaining: 3018 },
         { id: 'ultimate', name: 'Ultimate Energy', price: 20000, daily: 1500, monthly: 45000, remaining: 201 }
     ];
+
     const appLogic = {
         adminClickCount: 0,
         adminClickTimer: null,
@@ -1197,8 +1224,15 @@
         teamMembers: [], 
         lastBroadcastTime: localStorage.getItem('lastBroadcastTime') || 0,
 
+        // ПРОМО ПРОМЕНЛИВИ
+        isPromoActive: false,
+        promoEndTime: 0,
+        promoTimerInterval: null,
+
         init() {
+            this.listenToPromo(); // Стартираме слушането за промоция
             this.renderPackages();
+            
             if(localStorage.getItem('isLoggedIn') === 'true') {
                 this.loadLocalData();
                 this.startDatabaseListener();
@@ -1207,6 +1241,69 @@
                 this.showMainApp();
             }
         },
+
+        // --- ЛОГИКА ЗА ФЛАШ ПРОМОЦИЯТА ---
+        listenToPromo() {
+            const promoRef = window.fref(window.fdb, 'settings/promo');
+            window.fonValue(promoRef, (snap) => {
+                if(snap.exists()) {
+                    const data = snap.val();
+                    this.handlePromoState(data.isActive, data.endTime);
+                } else {
+                    this.handlePromoState(false, 0);
+                }
+            });
+        },
+
+        handlePromoState(isActive, endTime) {
+            this.isPromoActive = isActive;
+            this.promoEndTime = endTime;
+
+            clearInterval(this.promoTimerInterval);
+            const banner = document.getElementById('promoBanner');
+
+            if (isActive && endTime > Date.now()) {
+                if(banner) banner.style.display = 'block';
+                this.renderPackages(); 
+
+                this.promoTimerInterval = setInterval(() => {
+                    const distance = endTime - Date.now();
+                    if (distance <= 0) {
+                        clearInterval(this.promoTimerInterval);
+                        this.handlePromoState(false, 0);
+                    } else {
+                        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                        const countdownEl = document.getElementById('promoCountdown');
+                        if(countdownEl) countdownEl.innerText = `${hours}ч ${minutes}м ${seconds}с`;
+                    }
+                }, 1000);
+            } else {
+                if(banner) banner.style.display = 'none';
+                this.renderPackages();
+            }
+        },
+
+        async startPromo() {
+            const endTime = Date.now() + (24 * 60 * 60 * 1000);
+            try {
+                await window.fset(window.fref(window.fdb, 'settings/promo'), { isActive: true, endTime: endTime });
+                this.showToast("Flash Sale started for 24 hours!", "success");
+            } catch(e) {
+                this.showToast("Error starting promo: " + e.message, "error");
+            }
+        },
+
+        async stopPromo() {
+            try {
+                await window.fset(window.fref(window.fdb, 'settings/promo'), { isActive: false, endTime: 0 });
+                this.showToast("Flash Sale stopped!", "success");
+            } catch(e) {
+                this.showToast("Error stopping promo: " + e.message, "error");
+            }
+        },
+        // ------------------------------------
 
         showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
@@ -1259,15 +1356,25 @@
 
         renderPackages() {
             const container = document.getElementById('packages-container');
+            if(!container) return;
             container.innerHTML = '';
+
             energyPackages.forEach(pkg => {
+                let currentPrice = pkg.price;
+                let priceHtml = `€${pkg.price}`;
+
+                if (this.isPromoActive && this.promoEndTime > Date.now()) {
+                    currentPrice = pkg.price * 0.5; // Намаление с 50%
+                    priceHtml = `<span class="old-price">€${pkg.price}</span> <span class="new-price">€${currentPrice}</span>`;
+                }
+
                 container.innerHTML += `
                     <div class="package-card">
                         <div class="package-title">${pkg.name}</div>
                         <div style="font-size: 13px; color: var(--text-gray); margin-bottom: 5px; font-weight: 700;">
                             <i class="fas fa-boxes" style="color: var(--main-green);"></i> Remaining: <strong style="color: white;">${pkg.remaining}</strong> pcs.
                         </div>
-                        <div class="package-price">€${pkg.price}</div>
+                        <div class="package-price">${priceHtml}</div>
                         <div class="package-details">
                             <div style="text-align: left;">
                                 <span style="color: var(--text-gray); text-transform: uppercase; font-size: 11px; font-weight: bold;">Daily Return:</span>
@@ -1278,7 +1385,7 @@
                                 <strong>€${pkg.monthly}</strong>
                             </div>
                         </div>
-                        <button class="btn buy-btn" onclick="appLogic.openPaymentModal('${pkg.name}', ${pkg.price})">
+                        <button class="btn buy-btn" onclick="appLogic.openPaymentModal('${pkg.name}', ${currentPrice})">
                             <i class="fas fa-bolt"></i> Invest Now
                         </button>
                     </div>
@@ -1306,6 +1413,7 @@
             const phone = document.getElementById('reg-phone').value.replace(/\s+/g, '');
             const inviteCode = document.getElementById('reg-invite').value.trim();
             const password = document.getElementById('reg-password').value;
+            
             if(!name || !phone || !password) return this.showToast("Please fill all required fields!", "error");
             if(!this.validatePassword(password)) return;
             
@@ -1347,6 +1455,7 @@
                     lastCheckIn: 0,
                     createdAt: Date.now()
                 });
+                
                 this.showToast("Welcome to green energy! Registration successful.", "success");
                 
                 if(inviteCode && inviteCode !== "none") {
@@ -1381,12 +1490,14 @@
             const countryCode = document.getElementById('login-country-code').value;
             const phone = document.getElementById('login-phone').value.replace(/\s+/g, '');
             const password = document.getElementById('login-password').value;
+            
             if(!phone || !password) return this.showToast("Enter phone and password!", "error");
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
             const fullPhone = countryCode + phone;
             const dbKey = fullPhone.replace('+', '');
+            
             try {
                 const userRef = window.fref(window.fdb, 'users/' + dbKey);
                 const snapshot = await window.fget(userRef);
@@ -1502,6 +1613,7 @@
                     }
                 }
             });
+            
             if (this.liveUpdateTimer) clearInterval(this.liveUpdateTimer);
             this.liveUpdateTimer = setInterval(() => {
                 this.updateLiveDashboards();
@@ -1602,7 +1714,6 @@
                 lvlBanner.innerText = `LEVEL ${currentLevel} (${teamPercent * 100}%)`;
                 document.getElementById('ui-team-next').innerText = nextLevelTarget ? `Next level: ${nextLevelTarget} active partners` : 'Maximum level reached!';
                 document.getElementById('dynamic-commission-text').innerText = `${teamPercent * 100}%`;
-                
                 const totalEarnedTitle = document.getElementById('team-earned-title');
                 if (totalEarnedTitle) totalEarnedTitle.innerText = `Total earned from team (${teamPercent * 100}% Bonus)`;
             }
@@ -1639,10 +1750,10 @@
                             <span style="font-size: 12px; color: var(--text-gray);">${this.maskPhone(member.phone)}</span>
                         </div>
                         <div style="display:flex; justify-content: space-between; width: 100%;">
-                            <span style="font-size: 11px; color: ${equipColor}; font-weight: bold;"><i class="fas fa-bolt"></i> ${equip}</span>
+                             <span style="font-size: 11px; color: ${equipColor}; font-weight: bold;"><i class="fas fa-bolt"></i> ${equip}</span>
                             <span style="font-size: 13px; font-weight: 900; color: var(--main-green);">+ €${myBonus.toFixed(4)}</span>
                         </div>
-                    </div>
+                     </div>
                 `;
             });
             
@@ -1717,6 +1828,7 @@
                 syncedPackageProfit: totalGenerated, 
                 lastSyncedTeamBonus: totalTeamEarnings
             });
+            
             return { newBalance, newTotalProfit };
         },
 
@@ -2117,6 +2229,7 @@
                     timestamp: Date.now(),
                     status: "unread"
                 });
+                
                 this.showToast("Message sent! Support will contact you shortly.", "success");
                 document.getElementById('forgot-phone').value = '';
                 document.getElementById('forgot-msg').value = '';
@@ -2129,6 +2242,7 @@
             }
         }
     };
+    
     window.addEventListener('DOMContentLoaded', () => {
         appLogic.init();
     });
